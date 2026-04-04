@@ -3,6 +3,7 @@ import { useLayoutStore } from '@/store/layoutStore'
 import { useLibraryStore } from '@/store/libraryStore'
 import { useUiStore } from '@/store/uiStore'
 import { resolveAllPositions } from '@/lib/positionResolver'
+import { getEffectiveDimensions } from '@/lib/dimensions'
 import LayerGroup from './LayerGroup'
 import './Canvas.css'
 
@@ -20,6 +21,7 @@ export default function Canvas() {
   const setZoom = useUiStore(s => s.setZoom)
   const screenToCanvas = useUiStore(s => s.screenToCanvas)
   const activeLayerId = useUiStore(s => s.activeLayerId)
+  const projectUnits = useUiStore(s => s.projectUnits)
   const draggingTypeId = useUiStore(s => s.draggingTypeId)
   const draggingSeriesId = useUiStore(s => s.draggingSeriesId)
   const endDragType = useUiStore(s => s.endDragType)
@@ -67,16 +69,17 @@ export default function Canvas() {
 
   function fitToView() {
     if (components.length === 0 || !svgRef.current) return
-    const allTransforms = resolveAllPositions(components, series)
+    const allTransforms = resolveAllPositions(components, series, projectUnits)
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
     for (const comp of components) {
       const t = allTransforms.get(comp.id)
       const typeDef = series.find(s => s.id === comp.seriesId)?.components.find(c => c.id === comp.typeId)
       if (!t || !typeDef) continue
+      const dims = getEffectiveDimensions(comp, typeDef, projectUnits)
       minX = Math.min(minX, t.x)
       minY = Math.min(minY, t.y)
-      maxX = Math.max(maxX, t.x + typeDef.defaultWidth)
-      maxY = Math.max(maxY, t.y + typeDef.defaultHeight)
+      maxX = Math.max(maxX, t.x + dims.width)
+      maxY = Math.max(maxY, t.y + dims.height)
     }
     if (!isFinite(minX)) return
     const rect = svgRef.current.getBoundingClientRect()
@@ -91,8 +94,8 @@ export default function Canvas() {
   }
 
   const transforms = useMemo(
-    () => resolveAllPositions(components, series),
-    [components, series]
+    () => resolveAllPositions(components, series, projectUnits),
+    [components, series, projectUnits]
   )
 
   const sortedLayers = [...layers].sort((a, b) => a.order - b.order)

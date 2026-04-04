@@ -7,13 +7,14 @@ interface Props {
   portDef: PortDef
   typeDef: ComponentTypeDef
   transform: WorldTransform
+  dims: { width: number; height: number }
   isConnected: boolean
   isConnecting: boolean // this port is the source of an active connection
   onPointerDown: (portId: string, e: React.PointerEvent) => void
 }
 
-export default function PortDot({ portDef, typeDef, transform, isConnected, isConnecting, onPointerDown }: Props) {
-  const pos = getPortWorldPosition(transform, portDef, typeDef)
+export default function PortDot({ portDef, typeDef, transform, dims, isConnected, isConnecting, onPointerDown }: Props) {
+  const pos = getPortWorldPosition(transform, portDef, typeDef, dims)
 
   const color = isConnecting ? '#ffcc00'
     : isConnected ? '#44dd88'

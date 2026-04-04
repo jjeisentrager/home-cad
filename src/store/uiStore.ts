@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { ProjectUnits } from '@/lib/dimensions'
 
 export type SidebarTab = 'layers' | 'components' | 'properties'
 
@@ -6,6 +7,7 @@ interface UiState {
   activeSeriesId: string | null
   activeLayerId: string | null
   sidebarTab: SidebarTab
+  projectUnits: ProjectUnits
 
   // Viewport
   panX: number
@@ -34,6 +36,7 @@ interface UiActions {
   setActiveSeries: (id: string) => void
   setActiveLayer: (id: string | null) => void
   setSidebarTab: (tab: SidebarTab) => void
+  setProjectUnits: (units: ProjectUnits) => void
   setPan: (x: number, y: number) => void
   setZoom: (zoom: number) => void
   setViewport: (panX: number, panY: number, zoom: number) => void
@@ -55,6 +58,7 @@ export const useUiStore = create<UiState & UiActions>()((set, get) => ({
   activeSeriesId: null,
   activeLayerId: null,
   sidebarTab: 'layers',
+  projectUnits: 'in',
   panX: 40,
   panY: 40,
   zoom: 1,
@@ -71,6 +75,7 @@ export const useUiStore = create<UiState & UiActions>()((set, get) => ({
   setActiveSeries: (id) => set({ activeSeriesId: id }),
   setActiveLayer: (id) => set({ activeLayerId: id }),
   setSidebarTab: (tab) => set({ sidebarTab: tab }),
+  setProjectUnits: (units) => set({ projectUnits: units }),
   setPan: (x, y) => set({ panX: x, panY: y }),
   setZoom: (zoom) => set({ zoom }),
   setViewport: (panX, panY, zoom) => set({ panX, panY, zoom }),

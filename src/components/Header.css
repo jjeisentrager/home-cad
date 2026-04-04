@@ -33,3 +33,18 @@
 .header-actions button:hover {
   background: #1a4a7a;
 }
+
+.header-units-label {
+  color: #a0a0b0;
+  font-size: 12px;
+  align-self: center;
+}
+
+.header-units-select {
+  padding: 3px 6px;
+  background: #0f3460;
+  color: #e0e0e0;
+  border: 1px solid #1a4a7a;
+  border-radius: 4px;
+  font-size: 12px;
+}

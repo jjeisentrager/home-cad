@@ -25,6 +25,9 @@ export interface ComponentTypeDef {
   svgPath: string
   defaultWidth: number
   defaultHeight: number
+  // Optional: property keys whose values drive the visual width/height
+  widthProperty?: string
+  heightProperty?: string
   ports: PortDef[]
   properties: PropertyDef[]
 }

@@ -1,8 +1,18 @@
 import { useLayoutStore } from '@/store/layoutStore'
 import { useLibraryStore } from '@/store/libraryStore'
+import { useUiStore } from '@/store/uiStore'
 import type { PlacedComponent } from '@/types/layout'
 import type { ComponentTypeDef } from '@/types/library'
+import { UNITS_SHORT, type ProjectUnits } from '@/lib/dimensions'
 import './PropertiesPanel.css'
+
+// Spatial unit keywords — display these as the project unit instead
+const SPATIAL_UNITS = new Set(['inches', 'feet', 'mm', 'cm', 'ft', 'in', 'm'])
+
+function displayUnit(defUnit: string | undefined, projectUnits: ProjectUnits): string | undefined {
+  if (!defUnit) return undefined
+  return SPATIAL_UNITS.has(defUnit) ? UNITS_SHORT[projectUnits] : defUnit
+}
 
 export default function PropertiesPanel() {
   const selectedId = useLayoutStore(s => s.selectedComponentId)
@@ -20,6 +30,7 @@ export default function PropertiesPanel() {
 }
 
 function PropertiesEditor({ comp, typeDef }: { comp: PlacedComponent; typeDef: ComponentTypeDef }) {
+  const projectUnits = useUiStore(s => s.projectUnits)
   const updateLabel = useLayoutStore(s => s.updateComponentLabel)
   const updateProperty = useLayoutStore(s => s.updateComponentProperty)
   const updateLayer = useLayoutStore(s => s.updateComponentLayer)
@@ -73,7 +84,7 @@ function PropertiesEditor({ comp, typeDef }: { comp: PlacedComponent; typeDef: C
           <div className="props-section-title">Properties</div>
           {typeDef.properties.map(def => (
             <div key={def.key} className="props-row">
-              <label>{def.label}{def.unit ? ` (${def.unit})` : ''}</label>
+              <label>{def.label}{displayUnit(def.unit, projectUnits) ? ` (${displayUnit(def.unit, projectUnits)})` : ''}</label>
               {def.type === 'enum' ? (
                 <select
                   value={String(getPropValue(def.key))}

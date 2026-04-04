@@ -9,6 +9,7 @@
       "description": "Electrical wire run",
       "defaultWidth": 100,
       "defaultHeight": 30,
+      "widthProperty": "length",
       "svgPath": "M 0 6 L 100 6 M 0 15 L 100 15 M 0 24 L 100 24",
       "ports": [
         { "id": "hot-in",      "label": "Hot In",      "xFraction": 0.0, "yFraction": 0.2,  "normalAngle": 180 },

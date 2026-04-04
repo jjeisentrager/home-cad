@@ -2,6 +2,7 @@ import { useLayoutStore } from '@/store/layoutStore'
 import { useUiStore } from '@/store/uiStore'
 import { useLibraryStore } from '@/store/libraryStore'
 import type { PlacedComponent, WorldTransform } from '@/types/layout'
+import { getEffectiveDimensions } from '@/lib/dimensions'
 import PortDot from './PortDot'
 import SelectionBox from './SelectionBox'
 
@@ -24,10 +25,10 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
   const connectingFromPortId = useUiStore(s => s.connectingFromPortId)
   const beginPortConnect = useUiStore(s => s.beginPortConnect)
   const cancelPortConnect = useUiStore(s => s.cancelPortConnect)
+  const projectUnits = useUiStore(s => s.projectUnits)
   const layers = useLayoutStore(s => s.layers)
 
   const getComponentType = useLibraryStore(s => s.getComponentType)
-  // Select all components for connection detection (stable reference)
   const allComponents = useLayoutStore(s => s.components)
   const typeDef = getComponentType(comp.seriesId, comp.typeId)
   if (!typeDef) return null
@@ -37,13 +38,22 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
 
   const isSelected = selectedId === comp.id
   const { x, y, rotation, hasCycleError } = transform
-  const cx = x + typeDef.defaultWidth / 2
-  const cy = y + typeDef.defaultHeight / 2
+
+  // Effective pixel dimensions driven by this component's property values
+  const dims = getEffectiveDimensions(comp, typeDef, projectUnits)
+  const { width: effectiveW, height: effectiveH } = dims
+
+  // Rotation pivot: center of the effective bounding box
+  const cx = x + effectiveW / 2
+  const cy = y + effectiveH / 2
+
+  // Scale factors for the SVG path (which is drawn in defaultWidth × defaultHeight space)
+  const scaleX = effectiveW / typeDef.defaultWidth
+  const scaleY = effectiveH / typeDef.defaultHeight
 
   // Show ports when selected or zoomed in
   const showPorts = isSelected || zoom >= 0.7
 
-  // Check if any port on this component is connected (another component points to us)
   const connectedPortIds = new Set(
     allComponents
       .filter(c => c.positionAssignment?.destinationComponentId === comp.id)
@@ -53,7 +63,6 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
   function handlePointerDown(e: React.PointerEvent) {
     e.stopPropagation()
 
-    // If we're in port-connect mode and clicking background of this component, cancel
     if (connectingFromComponentId && connectingFromComponentId !== comp.id) {
       cancelPortConnect()
       return
@@ -64,7 +73,6 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
 
     if (isLocked) return
 
-    // Begin dragging placed component
     const canvasPos = screenToCanvas(e.clientX, e.clientY)
     beginDragPlaced(comp.id, canvasPos.x - x, canvasPos.y - y)
 
@@ -85,13 +93,10 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
     e.stopPropagation()
 
     if (connectingFromComponentId === null) {
-      // Start connection
       beginPortConnect(comp.id, portId)
     } else if (connectingFromComponentId === comp.id) {
-      // Clicking same component's port — cancel
       cancelPortConnect()
     } else {
-      // Complete connection: the previously started port connects to this port
       const sourceCompId = connectingFromComponentId
       const sourcePortId = connectingFromPortId!
       setPositionAssignment(sourceCompId, {
@@ -112,8 +117,10 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
       onPointerDown={handlePointerDown}
       style={{ cursor: isLocked ? 'not-allowed' : 'move' }}
     >
-      <rect x={x} y={y} width={typeDef.defaultWidth} height={typeDef.defaultHeight} fill="transparent" />
-      <g transform={`translate(${x}, ${y})`}>
+      {/* Hit-test rect uses effective dimensions */}
+      <rect x={x} y={y} width={effectiveW} height={effectiveH} fill="transparent" />
+      {/* Scale the SVG path from its default coordinate space to effective dimensions */}
+      <g transform={`translate(${x}, ${y}) scale(${scaleX}, ${scaleY})`}>
         <path
           d={typeDef.svgPath}
           stroke="#4a9eff"
@@ -121,13 +128,14 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
           fill="none"
           strokeLinecap="round"
           strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
         />
         {comp.label && (
           <text
             x={typeDef.defaultWidth / 2}
-            y={-6}
+            y={-6 / scaleY}
             textAnchor="middle"
-            fontSize={10}
+            fontSize={10 / Math.min(scaleX, scaleY)}
             fill="#c0c0d0"
             pointerEvents="none"
           >
@@ -148,6 +156,7 @@ export default function PlacedComponentSVG({ comp, transform, zoom }: Props) {
           portDef={port}
           typeDef={typeDef}
           transform={transform}
+          dims={dims}
           isConnected={connectedPortIds.has(port.id)}
           isConnecting={connectingFromComponentId === comp.id && connectingFromPortId === port.id}
           onPointerDown={handlePortPointerDown}

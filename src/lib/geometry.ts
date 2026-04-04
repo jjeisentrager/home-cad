@@ -27,14 +27,16 @@ export function rotatePoint(
 
 // Returns the world-space position and outward normal angle of a port,
 // given the component's resolved world transform.
+// Pass `dims` to override defaultWidth/defaultHeight (for dimensionally-driven components).
 export function getPortWorldPosition(
   transform: WorldTransform,
   portDef: PortDef,
-  typeDef: ComponentTypeDef
+  typeDef: ComponentTypeDef,
+  dims?: { width: number; height: number }
 ): { x: number; y: number; angle: number } {
   const { x, y, rotation } = transform
-  const w = typeDef.defaultWidth
-  const h = typeDef.defaultHeight
+  const w = dims?.width ?? typeDef.defaultWidth
+  const h = dims?.height ?? typeDef.defaultHeight
 
   // Port position in local (unrotated) space
   const lx = x + portDef.xFraction * w

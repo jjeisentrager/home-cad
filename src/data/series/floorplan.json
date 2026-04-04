@@ -9,6 +9,8 @@
       "description": "Exterior or interior wall section",
       "defaultWidth": 120,
       "defaultHeight": 14,
+      "widthProperty": "length",
+      "heightProperty": "width",
       "svgPath": "M 0 0 L 120 0 L 120 14 L 0 14 Z",
       "ports": [
         { "id": "port1", "label": "Left End",  "xFraction": 0.0, "yFraction": 0.5, "normalAngle": 180 },
@@ -27,6 +29,7 @@
       "description": "Window opening in a wall",
       "defaultWidth": 48,
       "defaultHeight": 14,
+      "widthProperty": "width",
       "svgPath": "M 0 0 L 48 0 L 48 14 L 0 14 Z M 12 0 L 12 14 M 36 0 L 36 14 M 12 7 L 36 7",
       "ports": [
         { "id": "port1", "label": "Center", "xFraction": 0.5, "yFraction": 0.0, "normalAngle": 270 }
@@ -41,6 +44,8 @@
       "description": "Door with swing arc",
       "defaultWidth": 40,
       "defaultHeight": 40,
+      "widthProperty": "width",
+      "heightProperty": "width",
       "svgPath": "M 0 0 L 0 36 M 0 0 A 36 36 0 0 1 36 36 M 0 36 L 40 36",
       "ports": [
         { "id": "port1", "label": "Frame Left",  "xFraction": 0.0, "yFraction": 0.9, "normalAngle": 270 },

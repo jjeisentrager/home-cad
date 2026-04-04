@@ -9,6 +9,8 @@
       "description": "Straight pipe section",
       "defaultWidth": 80,
       "defaultHeight": 20,
+      "widthProperty": "length",
+      "heightProperty": "diameter",
       "svgPath": "M 0 5 L 80 5 M 0 15 L 80 15 M 0 5 L 0 15 M 80 5 L 80 15",
       "ports": [
         { "id": "port1", "label": "Inlet",  "xFraction": 0.0, "yFraction": 0.5, "normalAngle": 180 },
@@ -25,6 +27,8 @@
       "description": "90-degree elbow fitting",
       "defaultWidth": 40,
       "defaultHeight": 40,
+      "widthProperty": "diameter",
+      "heightProperty": "diameter",
       "svgPath": "M 5 20 L 20 20 Q 35 20 35 5 L 35 5 M 5 30 L 20 30 Q 40 30 40 15 L 40 5",
       "ports": [
         { "id": "port1", "label": "Inlet",  "xFraction": 0.0, "yFraction": 0.625, "normalAngle": 180 },
@@ -42,6 +46,7 @@
       "description": "Wye fitting with branch",
       "defaultWidth": 80,
       "defaultHeight": 60,
+      "heightProperty": "diameter",
       "svgPath": "M 0 20 L 80 20 M 0 30 L 80 30 M 50 20 L 80 50 M 50 30 L 80 60",
       "ports": [
         { "id": "port1", "label": "Inlet",   "xFraction": 0.0,  "yFraction": 0.417, "normalAngle": 180 },
@@ -58,6 +63,7 @@
       "description": "Double wye fitting with two branches",
       "defaultWidth": 80,
       "defaultHeight": 80,
+      "heightProperty": "diameter",
       "svgPath": "M 0 35 L 80 35 M 0 45 L 80 45 M 40 35 L 80 5 M 40 45 L 80 80",
       "ports": [
         { "id": "port1", "label": "Inlet",    "xFraction": 0.0,  "yFraction": 0.5,   "normalAngle": 180 },
@@ -75,6 +81,7 @@
       "description": "Sanitary tee fitting",
       "defaultWidth": 80,
       "defaultHeight": 60,
+      "heightProperty": "diameter",
       "svgPath": "M 0 20 L 80 20 M 0 30 L 80 30 M 35 30 L 35 60 M 45 30 L 45 60",
       "ports": [
         { "id": "port1", "label": "Inlet",  "xFraction": 0.0,  "yFraction": 0.417, "normalAngle": 180 },

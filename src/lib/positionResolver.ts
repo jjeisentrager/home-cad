@@ -1,6 +1,7 @@
 import type { PlacedComponent, WorldTransform } from '@/types/layout'
 import type { SeriesDef } from '@/types/library'
 import { getPortWorldPosition, normalizeAngle, degreesToRadians } from './geometry'
+import { getEffectiveDimensions, type ProjectUnits } from './dimensions'
 
 function findTypeDef(series: SeriesDef[], seriesId: string, typeId: string) {
   return series.find(s => s.id === seriesId)?.components.find(c => c.id === typeId)
@@ -45,7 +46,8 @@ function topoSort(components: PlacedComponent[]): {
 
 export function resolveAllPositions(
   components: PlacedComponent[],
-  series: SeriesDef[]
+  series: SeriesDef[],
+  projectUnits: ProjectUnits
 ): Map<string, WorldTransform> {
   const result = new Map<string, WorldTransform>()
   const { order, cycleIds } = topoSort(components)
@@ -87,38 +89,32 @@ export function resolveAllPositions(
       continue
     }
 
-    // World position of the destination port
-    const destPortWorld = getPortWorldPosition(destTransform, destPortDef, destTypeDef)
+    const srcDims = getEffectiveDimensions(comp, typeDef, projectUnits)
+    const destDims = getEffectiveDimensions(destComp, destTypeDef, projectUnits)
+
+    // World position of the destination port (using dest component's effective dims)
+    const destPortWorld = getPortWorldPosition(destTransform, destPortDef, destTypeDef, destDims)
 
     // Target point where our source port must land
     const targetX = destPortWorld.x + offsetX
     const targetY = destPortWorld.y + offsetY
 
     // Rotation: source port normal must point anti-parallel to dest port normal
-    // Anti-parallel means dest normal + 180, plus any orientationOffset
     const desiredNormal = normalizeAngle(destPortWorld.angle + 180 + orientationOffset)
-    // Our source port's natural normal angle is srcPortDef.normalAngle (at rotation=0)
-    // We need: srcPortDef.normalAngle + rotation = desiredNormal
     const rotation = normalizeAngle(desiredNormal - srcPortDef.normalAngle)
 
-    // Now compute the bbox top-left so that the source port lands at targetX/Y.
-    // At the computed rotation, the source port's local position relative to bbox:
-    const w = typeDef.defaultWidth
-    const h = typeDef.defaultHeight
-    // Assume bbox top-left at (0,0) temporarily to find port offset from center
+    // Compute bbox top-left so the source port lands at targetX/Y using effective dims
+    const w = srcDims.width
+    const h = srcDims.height
     const portLocalX = srcPortDef.xFraction * w
     const portLocalY = srcPortDef.yFraction * h
     const centerOffsetX = portLocalX - w / 2
     const centerOffsetY = portLocalY - h / 2
 
-    // Rotate that offset by the computed rotation
     const rad = degreesToRadians(rotation)
     const rotatedOffsetX = centerOffsetX * Math.cos(rad) - centerOffsetY * Math.sin(rad)
     const rotatedOffsetY = centerOffsetX * Math.sin(rad) + centerOffsetY * Math.cos(rad)
 
-    // The source port world position = bbox_center + rotatedOffset
-    // bbox_center = (x + w/2, y + h/2)
-    // So: x + w/2 + rotatedOffsetX = targetX  →  x = targetX - w/2 - rotatedOffsetX
     const x = targetX - w / 2 - rotatedOffsetX
     const y = targetY - h / 2 - rotatedOffsetY
 
