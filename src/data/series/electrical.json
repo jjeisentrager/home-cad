@@ -1,0 +1,117 @@
+{
+  "id": "electrical",
+  "label": "Electrical",
+  "description": "Electrical system components",
+  "components": [
+    {
+      "id": "wire",
+      "label": "Wire",
+      "description": "Electrical wire run",
+      "defaultWidth": 100,
+      "defaultHeight": 30,
+      "svgPath": "M 0 6 L 100 6 M 0 15 L 100 15 M 0 24 L 100 24",
+      "ports": [
+        { "id": "hot-in",      "label": "Hot In",      "xFraction": 0.0, "yFraction": 0.2,  "normalAngle": 180 },
+        { "id": "neutral-in",  "label": "Neutral In",  "xFraction": 0.0, "yFraction": 0.5,  "normalAngle": 180 },
+        { "id": "gnd-in",      "label": "Ground In",   "xFraction": 0.0, "yFraction": 0.8,  "normalAngle": 180 },
+        { "id": "hot-out",     "label": "Hot Out",     "xFraction": 1.0, "yFraction": 0.2,  "normalAngle": 0 },
+        { "id": "neutral-out", "label": "Neutral Out", "xFraction": 1.0, "yFraction": 0.5,  "normalAngle": 0 },
+        { "id": "gnd-out",     "label": "Ground Out",  "xFraction": 1.0, "yFraction": 0.8,  "normalAngle": 0 }
+      ],
+      "properties": [
+        { "key": "length", "label": "Length", "type": "number", "unit": "inches", "defaultValue": 40 },
+        { "key": "gauge",  "label": "Gauge",  "type": "enum", "enumValues": ["14 AWG","12 AWG","10 AWG","8 AWG"], "defaultValue": "12 AWG" },
+        { "key": "turn",   "label": "Turn",   "type": "enum", "enumValues": ["None","Right","Left"], "defaultValue": "None" }
+      ]
+    },
+    {
+      "id": "breaker-panel",
+      "label": "Breaker Panel",
+      "description": "Main electrical service panel",
+      "defaultWidth": 60,
+      "defaultHeight": 120,
+      "svgPath": "M 0 0 L 60 0 L 60 120 L 0 120 Z M 5 5 L 55 5 L 55 115 L 5 115 Z M 5 12 L 55 12 M 5 22 L 55 22 M 5 32 L 55 32 M 5 42 L 55 42 M 5 52 L 55 52 M 5 62 L 55 62 M 5 72 L 55 72 M 5 82 L 55 82 M 5 92 L 55 92 M 5 102 L 55 102",
+      "ports": [
+        { "id": "neutral", "label": "Neutral Bus", "xFraction": 0.5,  "yFraction": 0.0,   "normalAngle": 270 },
+        { "id": "gnd",     "label": "Ground Bus",  "xFraction": 0.5,  "yFraction": 1.0,   "normalAngle": 90 },
+        { "id": "slot-1",  "label": "Slot 1",      "xFraction": 1.0,  "yFraction": 0.083, "normalAngle": 0 },
+        { "id": "slot-2",  "label": "Slot 2",      "xFraction": 1.0,  "yFraction": 0.167, "normalAngle": 0 },
+        { "id": "slot-3",  "label": "Slot 3",      "xFraction": 1.0,  "yFraction": 0.25,  "normalAngle": 0 },
+        { "id": "slot-4",  "label": "Slot 4",      "xFraction": 1.0,  "yFraction": 0.333, "normalAngle": 0 },
+        { "id": "slot-5",  "label": "Slot 5",      "xFraction": 1.0,  "yFraction": 0.417, "normalAngle": 0 },
+        { "id": "slot-6",  "label": "Slot 6",      "xFraction": 1.0,  "yFraction": 0.5,   "normalAngle": 0 },
+        { "id": "slot-7",  "label": "Slot 7",      "xFraction": 1.0,  "yFraction": 0.583, "normalAngle": 0 },
+        { "id": "slot-8",  "label": "Slot 8",      "xFraction": 1.0,  "yFraction": 0.667, "normalAngle": 0 }
+      ],
+      "properties": [
+        { "key": "amps",  "label": "Main Amps", "type": "number", "unit": "amps", "defaultValue": 200 },
+        { "key": "slots", "label": "Slots",     "type": "number", "defaultValue": 20 }
+      ]
+    },
+    {
+      "id": "breaker",
+      "label": "Breaker",
+      "description": "Circuit breaker",
+      "defaultWidth": 30,
+      "defaultHeight": 20,
+      "svgPath": "M 0 0 L 30 0 L 30 20 L 0 20 Z M 8 10 L 22 10 M 15 4 L 15 16",
+      "ports": [
+        { "id": "panel", "label": "Panel Connection", "xFraction": 0.0, "yFraction": 0.5, "normalAngle": 180 }
+      ],
+      "properties": [
+        { "key": "limit", "label": "Limit", "type": "number", "unit": "amps", "defaultValue": 15 },
+        { "key": "poles", "label": "Poles", "type": "enum", "enumValues": ["Single","Double"], "defaultValue": "Single" }
+      ]
+    },
+    {
+      "id": "switch",
+      "label": "Switch",
+      "description": "Wall light switch",
+      "defaultWidth": 20,
+      "defaultHeight": 30,
+      "svgPath": "M 0 0 L 20 0 L 20 30 L 0 30 Z M 5 8 L 15 8 M 10 8 L 10 22 M 5 22 L 15 22",
+      "ports": [
+        { "id": "hot",     "label": "Hot",     "xFraction": 0.0, "yFraction": 0.3,  "normalAngle": 180 },
+        { "id": "switched","label": "Switched","xFraction": 0.0, "yFraction": 0.7,  "normalAngle": 180 },
+        { "id": "gnd",     "label": "Ground",  "xFraction": 1.0, "yFraction": 0.5,  "normalAngle": 0 }
+      ],
+      "properties": [
+        { "key": "type", "label": "Type", "type": "enum", "enumValues": ["Single Pole","3-Way","4-Way"], "defaultValue": "Single Pole" }
+      ]
+    },
+    {
+      "id": "fixture",
+      "label": "Fixture",
+      "description": "Light fixture",
+      "defaultWidth": 40,
+      "defaultHeight": 40,
+      "svgPath": "M 20 20 m -14 0 a 14 14 0 1 0 28 0 a 14 14 0 1 0 -28 0 M 20 4 L 20 0 M 20 40 L 20 36 M 4 20 L 0 20 M 40 20 L 36 20",
+      "ports": [
+        { "id": "hot",     "label": "Hot",     "xFraction": 0.5, "yFraction": 0.0, "normalAngle": 270 },
+        { "id": "neutral", "label": "Neutral", "xFraction": 0.0, "yFraction": 0.5, "normalAngle": 180 },
+        { "id": "gnd",     "label": "Ground",  "xFraction": 1.0, "yFraction": 0.5, "normalAngle": 0 }
+      ],
+      "properties": [
+        { "key": "type",  "label": "Type",  "type": "enum", "enumValues": ["Ceiling","Wall","Recessed"], "defaultValue": "Ceiling" },
+        { "key": "watts", "label": "Watts", "type": "number", "unit": "W", "defaultValue": 60 }
+      ]
+    },
+    {
+      "id": "outlet",
+      "label": "Outlet",
+      "description": "Electrical outlet/receptacle",
+      "defaultWidth": 20,
+      "defaultHeight": 30,
+      "svgPath": "M 0 0 L 20 0 L 20 30 L 0 30 Z M 7 8 L 7 14 M 13 8 L 13 14 M 10 18 m -3 0 a 3 3 0 1 0 6 0 a 3 3 0 1 0 -6 0",
+      "ports": [
+        { "id": "hot",     "label": "Hot",     "xFraction": 0.0, "yFraction": 0.2, "normalAngle": 180 },
+        { "id": "neutral", "label": "Neutral", "xFraction": 0.0, "yFraction": 0.5, "normalAngle": 180 },
+        { "id": "gnd",     "label": "Ground",  "xFraction": 0.0, "yFraction": 0.8, "normalAngle": 180 }
+      ],
+      "properties": [
+        { "key": "type",  "label": "Type",  "type": "enum", "enumValues": ["Standard","GFCI","USB","20A"], "defaultValue": "Standard" },
+        { "key": "amps",  "label": "Amps",  "type": "number", "unit": "amps", "defaultValue": 15 }
+      ]
+    }
+  ]
+}

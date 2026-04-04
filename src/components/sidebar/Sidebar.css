@@ -1,0 +1,46 @@
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: #16213e;
+  border-right: 1px solid #0f3460;
+  overflow: hidden;
+}
+
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid #0f3460;
+}
+
+.sidebar-tabs button {
+  flex: 1;
+  padding: 8px 4px;
+  background: transparent;
+  color: #9090a0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sidebar-tabs button:hover {
+  color: #e0e0e0;
+  background: #1a2a4e;
+}
+
+.sidebar-tabs button.active {
+  color: #e94560;
+  border-bottom-color: #e94560;
+}
+
+.sidebar-tabs button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
