@@ -1,2 +1,6 @@
 # FreeCAD backup files
 *.FCBak
+
+# Python
+__pycache__/
+*.pyc
