@@ -127,13 +127,22 @@ local +Y): **+90°** makes the front point −X (long-side appliances: fridge, r
 is the worked example — fridge at the long-side end, range mid-long-side, sink
 mid-short-side (rim at Z=939.8), dishwasher under the short-side end.
 
-**Countertop cut-outs** (`Kitchen/finish_kitchen.py`): the sink and stove read
-*through* the countertop because the L-top (`Body001` / CounterTop) is boolean-cut
-by a `Part::Cut` (`CounterTop_Cut`) whose tool is a compound of two boxes — the
-sink bowl opening and a full-depth stove slot (the slot splits the long run into
-two solids, which is correct). The cut lives inside the `Part` App::Part; the
-original `Body001`/`Pad002` are hidden and `CounterTop_Cut` is shown, so the
-external link renders the holed top.
+**Countertop cut-outs** (`Kitchen/fix_colors_and_sink.py`): the sink and stove
+read *through* the counter because **both** the base (`Body`/CounterBase) and the
+L-top (`Body001`/CounterTop) are cut by a compound of two boxes — a sink shaft
+(bowl-outer footprint, Z 705→941, exposes the basin in the cabinet) and a
+full-height stove slot (Z −1→941, splits each into 2 solids, which is correct).
+The cut results are baked `Part::Feature`s `CounterBase_Cut` / `CounterTop_Cut`
+inside the `Part` App::Part; the original `Body`/`Body001`/`Pad`/`Pad002` are
+hidden so the external link renders the holed versions.
+
+**Counter colors:** base/cabinet = white `(255,255,255)`, countertop = black
+`(0,0,0)`; the island matches (white base, black top). The cut `Part::Feature`s
+must be re-tinted to these (a fresh feature defaults to gray ~`(173,181,189)`).
+Appliances carry per-object colors set by their `color_save.py` (steel body
+`(189,194,199)`, dark trim `(33,33,38)`, etc.). **A headless `freecadcmd` save
+wipes all of this** (it drops GuiDocument); restore from the last good commit
+with the offscreen GUI as `fix_colors_and_sink.py` does.
 
 ## Workflow tips
 - After scripting changes, verify by reopening the saved file in a fresh
