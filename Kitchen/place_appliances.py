@@ -38,7 +38,7 @@ APPLIANCES = [
     ("Sink",         "KWT310-33/KWT310-33.FCStd",         "Sink",
         P(V(-1231.9, -25.4,   939.8), ROT180)),
     ("Dishwasher",   "WDP540HAMZ/WDP540HAMZ.FCStd",       "Dishwasher",
-        P(V(-2695.6, 0.0,     0.0),   ROT180)),
+        P(V(-2108.2, 0.0,     0.0),   ROT180)),   # moved next to the sink base
 ]
 
 log = open(os.path.join(ROOT, "place_report.txt"), "w")

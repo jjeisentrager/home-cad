@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Replace the solid CounterBase with a run of individual base cabinets fitted to
-the L-counter, leaving gaps for the range (long leg) and dishwasher (short leg)
-and a sink base under the sink.  The countertop (CounterTop_Cut, black) and the
-island are left untouched.
+Build the L-counter base cabinets as APPEARANCE-ONLY casework: each cabinet is a
+recessed carcass + toe kick + slab door / drawer fronts (separated by reveal
+gaps) + dark bar pulls.  No moving parts -- it just reads as cabinets & drawers.
 
-Reference frame (counter-local == world): long leg runs -Y along wall X=0,
-front faces -X; short leg runs -X along wall Y=0, front faces -Y; both 609.6 deep
-(24"); cabinet box top Z=914.4 (36"); countertop slab 914.4..939.8.
+Also moves the dishwasher next to the sink base and opens its bay there, putting
+a base cabinet back at the short-leg end.
 
-Cabinets carry a recessed toe kick (4" tall, 3" set-back) on their exposed front.
-Each cabinet is one fused Part::Feature, painted white, added into the linked
-App::Part "Part" so it shows through the Kitchen_Counter link in the assembly.
+Reference frame (counter-local == world): long leg runs -Y along wall X=0, front
+faces -X; short leg runs -X along wall Y=0, front faces -Y; both 609.6 deep (24");
+cabinet box top Z=914.4 (36"); countertop slab 914.4..939.8 (untouched).
+
+Front detailing: panels are 19 mm slabs flush with the nominal front (-609.6),
+the carcass behind them is recessed 19 mm so the 4 mm reveal gaps read as shadow
+lines; pulls stand 14 mm proud and are dark.
 
 Run with the GUI layer up so colors + GuiDocument persist:
   flatpak run --env=QT_QPA_PLATFORM=offscreen org.freecad.FreeCAD \
@@ -25,12 +27,19 @@ import Part
 ROOT = "/home/joee/github/alieniron/home-cad"
 KIT = os.path.join(ROOT, "Kitchen")
 V = App.Vector
-IN = 25.4
+
 DEPTH = 609.6        # 24"
-TOP_Z = 914.4        # 36" cabinet box top (countertop sits above)
-TK_H = 101.6         # 4" toe kick height
-TK_SET = 76.2        # 3" toe kick set-back
+FRONT = -DEPTH       # nominal front plane (-609.6)
+T = 19.0             # panel slab thickness
+CARC = FRONT + T     # carcass front (recessed) = -590.6
+TOP_Z = 914.4        # cabinet box top
+TK_H = 101.6         # toe kick height
+TK_SET = 76.2        # toe kick set-back
+G = 4.0              # reveal gap
+PP = 14.0            # pull proud depth
+PT = 16.0            # pull bar cross-section
 WHITE = (1.0, 1.0, 1.0, 1.0)
+DARK = (0.13, 0.13, 0.14, 1.0)
 
 log = open(os.path.join(ROOT, "cab_report.txt"), "w")
 def L(*a): log.write(" ".join(str(x) for x in a) + "\n")
@@ -43,7 +52,7 @@ def show(o, vis=True):
     if o.ViewObject is not None:
         o.ViewObject.Visibility = vis
 
-def paint(o, rgba=WHITE):
+def paint(o, rgba):
     vo = o.ViewObject
     vo.Transparency = 0
     vo.ShapeColor = rgba
@@ -54,87 +63,168 @@ def paint(o, rgba=WHITE):
     except Exception as e:
         L("paint err", o.Name, e)
 
+# --- front-face panel + pull generation ------------------------------------
+# orientation 'long': width axis = Y, front axis = X.
+# orientation 'short': width axis = X, front axis = Y.
+# config = list of bands top->bottom; band = (kind, cols, h)
+#   kind 'drawer'|'door'; h = number(mm) | 'fill' | 'eq'
+def face(orient, w0, w1, config):
+    """Return (panel_solids[], pull_solids[]) for a cabinet front."""
+    panels, pulls = [], []
+    z0, z1 = TK_H, TOP_Z
+    H = z1 - z0
+    fixed = sum(b[2] for b in config if isinstance(b[2], (int, float)))
+    nshare = sum(1 for b in config if b[2] in ("fill", "eq"))
+    avail = H - 2 * G - (len(config) - 1) * G - fixed
+    share = avail / nshare if nshare else 0.0
+
+    def W(wa, wb, zb, zt):           # width-span panel/box at given Z band
+        if orient == "long":
+            return box(FRONT, CARC, wa, wb, zb, zt)
+        return box(wa, wb, FRONT, CARC, zb, zt)
+
+    def hpull(wa, wb, zc):           # horizontal pull (drawer), along width axis
+        plen = min((wb - wa) * 0.5, 220.0)
+        pc = (wa + wb) / 2.0
+        a, b = pc - plen / 2, pc + plen / 2
+        if orient == "long":
+            return box(FRONT - PP, FRONT, a, b, zc - PT / 2, zc + PT / 2)
+        return box(a, b, FRONT - PP, FRONT, zc - PT / 2, zc + PT / 2)
+
+    def vpull(wc, zb, zt):           # vertical pull (door), along Z
+        if orient == "long":
+            return box(FRONT - PP, FRONT, wc - PT / 2, wc + PT / 2, zb, zt)
+        return box(wc - PT / 2, wc + PT / 2, FRONT - PP, FRONT, zb, zt)
+
+    ztop = z1 - G
+    for kind, cols, h in config:
+        bh = h if isinstance(h, (int, float)) else share
+        zb, zt = ztop - bh, ztop
+        Wt = w1 - w0
+        pw = (Wt - 2 * G - (cols - 1) * G) / cols
+        for c in range(cols):
+            wa = w0 + G + c * (pw + G)
+            wb = wa + pw
+            panels.append(W(wa, wb, zb + G / 2, zt - G / 2))
+            if kind == "drawer":
+                pulls.append(hpull(wa, wb, zt - 38))
+            else:  # door: vertical pull near the inner edge
+                if cols > 1 and c == 0:
+                    wc = wb - 45
+                elif cols > 1 and c == cols - 1:
+                    wc = wa + 45
+                else:
+                    wc = wb - 45
+                pulls.append(vpull(wc, zb + 60, zt - 30))
+        ztop = zb - G
+    return panels, pulls
+
+def carcass(orient, w0, w1, sink_shaft=False):
+    if orient == "long":
+        c = box(CARC, 0.0, w0, w1, TK_H, TOP_Z)
+        p = box(CARC + (TK_SET - T), 0.0, w0, w1, 0.0, TK_H)  # toe kick
+    else:
+        c = box(w0, w1, CARC, 0.0, TK_H, TOP_Z)
+        p = box(w0, w1, CARC + (TK_SET - T), 0.0, 0.0, TK_H)
+    body = c.fuse(p)
+    if sink_shaft:
+        shaft = box(-2060.7, -1241.3, -524.0, -85.6, 705.0, TOP_Z + 1)
+        body = body.cut(shaft)
+    return body
+
+def corner_unit():
+    c = box(CARC, 0.0, CARC, 0.0, TK_H, TOP_Z)
+    p = box(CARC + (TK_SET - T), 0.0, CARC + (TK_SET - T), 0.0, 0.0, TK_H)
+    body = c.fuse(p)
+    panels, pulls = [], []
+    # door on the -X face (long-leg facing)
+    pn, pu = face("long", FRONT + G, -G, [("door", 1, "fill")])
+    panels += pn; pulls += pu
+    # door on the -Y face (short-leg facing)
+    pn, pu = face("short", FRONT + G, -G, [("door", 1, "fill")])
+    panels += pn; pulls += pu
+    body = body.fuse(panels)
+    return body, pulls
+
+# config presets
+DD = [("drawer", 2, 180), ("door", 2, "fill")]   # 2 drawers / 2 doors
+D2 = [("drawer", 1, 180), ("door", 2, "fill")]   # 1 drawer / 2 doors
+D1 = [("drawer", 1, 180), ("door", 1, "fill")]   # 1 drawer / 1 door
+DR3 = [("drawer", 1, "eq"), ("drawer", 1, "eq"), ("drawer", 1, "eq")]  # 3 drawers
+
+# (name, orient, w0, w1, config, sink_shaft)
+CABS = [
+    # long leg (front -X): w0/w1 are Y, w0 nearer corner (less negative)
+    ("Cab_L1", "long", -1524.0, -609.6, DD, False),
+    ("Cab_L2", "long", -2438.4, -1524.0, DD, False),
+    ("Cab_L3", "long", -3090.0, -2438.4, DR3, False),
+    ("Cab_L4", "long", -4784.4, -3870.0, DD, False),
+    ("Cab_L5", "long", -5698.8, -4784.4, D2, False),
+    ("Cab_L6", "long", -6613.2, -5698.8, DD, False),
+    ("Cab_L7", "long", -6959.6, -6613.2, DR3, False),
+    # short leg (front -Y): w0/w1 are X.  DW now sits next to the sink base:
+    #   Cab_S1 | SinkBase | DW gap | Cab_S_end
+    ("Cab_S1",    "short", -1193.8, -609.6, D1, False),
+    ("SinkBase",  "short", -2108.2, -1193.8, D2, True),
+    ("Cab_S_end", "short", -3302.0, -2714.6, D1, False),
+]
+
 cd = App.openDocument(os.path.join(KIT, "Kitchen_Counter.FCStd"))
 part = cd.getObject("Part")
 
-# --- remove any cabinets from a previous run -------------------------------
+# remove anything from previous runs
 for o in list(cd.Objects):
-    if o.Name.startswith("Cab_") or o.Name == "SinkBase":
+    if o.Name.startswith("Cab_") or o.Name in ("SinkBase", "SinkBase_Pulls"):
         cd.removeObject(o.Name)
 
-# --- cabinet builders ------------------------------------------------------
-def long_cab(y0, y1):   # along -Y, front -X; y0 nearer corner (> y1)
-    carc = box(-DEPTH, 0.0, y1, y0, TK_H, TOP_Z)
-    plin = box(-DEPTH + TK_SET, 0.0, y1, y0, 0.0, TK_H)
-    return carc.fuse(plin)
+made = []   # (feature_name, rgba)
 
-def short_cab(x0, x1):  # along -X, front -Y; x0 nearer corner (> x1)
-    carc = box(x1, x0, -DEPTH, 0.0, TK_H, TOP_Z)
-    plin = box(x1, x0, -DEPTH + TK_SET, 0.0, 0.0, TK_H)
-    return carc.fuse(plin)
+# corner
+cbody, cpulls = corner_unit()
+f = cd.addObject("Part::Feature", "Cab_Corner"); f.Label = "Cab_Corner"
+f.Shape = cbody; part.addObject(f); made.append(("Cab_Corner", WHITE))
+if cpulls:
+    pf = cd.addObject("Part::Feature", "Cab_Corner_Pulls"); pf.Label = "Cab_Corner_Pulls"
+    pf.Shape = Part.makeCompound(cpulls); part.addObject(pf)
+    made.append(("Cab_Corner_Pulls", DARK))
 
-def corner_cab():
-    carc = box(-DEPTH, 0.0, -DEPTH, 0.0, TK_H, TOP_Z)
-    plin = box(-DEPTH + TK_SET, 0.0, -DEPTH + TK_SET, 0.0, 0.0, TK_H)
-    return carc.fuse(plin)
-
-cabs = []  # (name, shape)
-cabs.append(("Cab_Corner", corner_cab()))
-
-# LONG LEG -- segment A (corner side -> range), segment B (range -> fridge end)
-# range gap kept at Y[-3090, -3870] (range occupies Y[-3100.4,-3859.2])
-longA = [(-609.6, -1524.0), (-1524.0, -2438.4), (-2438.4, -3090.0)]
-longB = [(-3870.0, -4784.4), (-4784.4, -5698.8),
-         (-5698.8, -6613.2), (-6613.2, -6959.6)]
-for i, (y0, y1) in enumerate(longA + longB, 1):
-    cabs.append(("Cab_L%d" % i, long_cab(y0, y1)))
-
-# SHORT LEG -- sink base centered on sink (center X=-1651), DW gap at the end
-# S1: corner -> sink base; SinkBase 36"; S2: sink base -> DW; DW gap X[-2690,-3302]
-short_plain = [("Cab_S1", -609.6, -1193.8), ("Cab_S2", -2108.2, -2690.0)]
-for name, x0, x1 in short_plain:
-    cabs.append((name, short_cab(x0, x1)))
-
-# sink base: 36" cabinet, then cut the sink shaft so the bowl hangs inside it
-sink_base = short_cab(-1193.8, -2108.2)
-sink_shaft = box(-2060.7, -1241.3, -524.0, -85.6, 705.0, TOP_Z + 1)
-sink_base = sink_base.cut(sink_shaft)
-cabs.append(("SinkBase", sink_base))
-
-# --- create the features, paint, and file them in the App::Part ------------
-for name, shp in cabs:
-    f = cd.addObject("Part::Feature", name)
-    f.Label = name
-    f.Shape = shp
-    part.addObject(f)
+for name, orient, w0, w1, cfg, sink in CABS:
+    body = carcass(orient, w0, w1, sink)
+    panels, pulls = face(orient, w0, w1, cfg)
+    body = body.fuse(panels)
+    f = cd.addObject("Part::Feature", name); f.Label = name
+    f.Shape = body; part.addObject(f); made.append((name, WHITE))
+    if pulls:
+        pf = cd.addObject("Part::Feature", name + "_Pulls"); pf.Label = name + "_Pulls"
+        pf.Shape = Part.makeCompound(pulls); part.addObject(pf)
+        made.append((name + "_Pulls", DARK))
 
 cd.recompute()
-for name, _ in cabs:
+for name, rgba in made:
     o = cd.getObject(name)
-    paint(o, WHITE)
+    paint(o, rgba)
     show(o, True)
 
-# hide the old solid base representations (keep the black countertop)
+# hide the old solid base; keep the black countertop + island
 for nm in ("Body", "Pad", "CounterBase_Cut"):
-    o = cd.getObject(nm)
-    if o:
-        show(o, False)
-# keep these visible
+    if cd.getObject(nm):
+        show(cd.getObject(nm), False)
 for nm in ("CounterTop_Cut", "Part", "Part001",
            "Body002", "Pad003", "Body003", "Pad004"):
-    o = cd.getObject(nm)
-    if o:
-        show(o, True)
+    if cd.getObject(nm):
+        show(cd.getObject(nm), True)
 cd.recompute()
 cd.save()
-L("cabinets created:", [c[0] for c in cabs])
-for name, _ in cabs:
-    bb = cd.getObject(name).Shape.BoundBox
-    L("  %-12s X[%8.1f,%8.1f] Y[%9.1f,%9.1f] Z[%6.1f,%6.1f]" %
-      (name, bb.XMin, bb.XMax, bb.YMin, bb.YMax, bb.ZMin, bb.ZMax))
+L("features:", [m[0] for m in made])
 
-# --- refresh the assembly so the link re-reads the rebuilt counter ----------
+# --- assembly: move the dishwasher next to the sink, refresh links ----------
 ad = App.openDocument(os.path.join(KIT, "Kitchen_Assembly.FCStd"))
+dw = ad.getObject("Dishwasher")
+if dw:
+    pl = dw.Placement
+    pl.Base = V(-2108.2, 0.0, 0.0)   # max-X edge against the sink base
+    dw.Placement = pl
+    L("dishwasher moved to origin X=-2108.2")
 for o in ad.Objects:
     if o.TypeId in ("App::Link", "App::Part") or o.TypeId.startswith("Assembly::"):
         show(o, True)
