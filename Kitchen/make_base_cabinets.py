@@ -155,16 +155,17 @@ DR3 = [("drawer", 1, "eq"), ("drawer", 1, "eq"), ("drawer", 1, "eq")]  # 3 drawe
 # (name, orient, w0, w1, config, sink_shaft)
 CABS = [
     # long leg (front -X): w0/w1 are Y (w0 = min/far-from-corner, w1 = max).
-    # Layout: corner | L1 L2 L3 | range gap | L4 | fridge gap | L5 L6 L7 | wall.
+    # Layout: corner | L1 L2 | range | L3 L4 L5 | fridge | L6 L7 | wall.
+    # (stove pulled 1 cab toward the corner; fridge pushed 1 cab toward the end)
     ("Cab_L1", "long", -1524.0, -609.6, DD, False),
     ("Cab_L2", "long", -2438.4, -1524.0, DD, False),
-    ("Cab_L3", "long", -3090.0, -2438.4, DR3, False),
-    # range gap Y[-3870,-3090]
-    ("Cab_L4", "long", -4784.4, -3870.0, DD, False),   # 1 cabinet stove<->fridge
-    # fridge gap Y[-5704.4,-4784.4]; remaining 3 cabinets beyond the fridge
-    ("Cab_L5", "long", -6466.4, -5704.4, DD, False),
-    ("Cab_L6", "long", -7228.4, -6466.4, D2, False),
-    ("Cab_L7", "long", -7867.6, -7228.4, DR3, False),
+    # range gap Y[-3218.4,-2438.4]  (2 cabinets corner<->stove)
+    ("Cab_L3", "long", -4132.8, -3218.4, DD, False),   # 3 cabinets stove<->fridge
+    ("Cab_L4", "long", -5047.2, -4132.8, DD, False),
+    ("Cab_L5", "long", -5809.2, -5047.2, D2, False),
+    # fridge gap Y[-6729.2,-5809.2]  (2 cabinets fridge<->wall)
+    ("Cab_L6", "long", -7298.4, -6729.2, D1, False),
+    ("Cab_L7", "long", -7867.6, -7298.4, D1, False),
     # short leg (front -Y): w0/w1 are X.  DW now sits next to the sink base:
     #   Cab_S1 | SinkBase | DW gap | Cab_S_end
     ("Cab_S1",    "short", -1193.8, -609.6, D1, False),
@@ -208,15 +209,16 @@ for name, rgba in made:
     paint(o, rgba)
     show(o, True)
 
-# countertop: the fridge now sits inside the long-leg run, so extend the black
-# slab over the relocated end cabinets and cut a full gap where the fridge goes.
+# countertop: rebuild the black slab from the clean L-pad (Body001) every run so
+# this stays idempotent -- extend over the relocated end cabinets and cut the
+# sink hole, the (relocated) stove slot, and a full gap for the (relocated) fridge.
 top = cd.getObject("CounterTop_Cut")
-tsh = top.Shape.copy()
-ext = box(-660.4, 0.0, -7918.4, -7010.4, 914.4, 939.8)   # end extension (50.8 overhang)
-tsh = tsh.fuse(ext)
-fridge_gap = box(-700.0, 5.0, -5704.4, -4784.4, 913.0, 941.0)
-tsh = tsh.cut(fridge_gap)
-top.Shape = tsh
+slab = cd.getObject("Body001").Shape.copy()
+slab = slab.fuse(box(-660.4, 0.0, -7918.4, -7010.4, 914.4, 939.8))  # end extension
+sink_hole = box(-2060.7, -1241.3, -524.0, -85.6, 913.0, 941.0)
+stove_slot = box(-665.0, 5.0, -3218.4, -2438.4, 913.0, 941.0)        # range gap
+fridge_gap = box(-700.0, 5.0, -6729.2, -5809.2, 913.0, 941.0)        # fridge gap
+top.Shape = slab.cut(Part.makeCompound([sink_hole, stove_slot, fridge_gap]))
 top.recompute()
 paint(top, (0.0, 0.0, 0.0, 1.0))   # keep it black
 show(top, True)
@@ -242,12 +244,18 @@ if dw:
     pl.Base = V(-2108.2, 0.0, 0.0)   # max-X edge against the sink base
     dw.Placement = pl
     L("dishwasher moved to origin X=-2108.2")
+rg = ad.getObject("Range")
+if rg:
+    pl = rg.Placement
+    pl.Base = V(0.0, -3207.8, 0.0)   # pulled 1 cabinet toward the corner
+    rg.Placement = pl
+    L("range moved to origin Y=-3207.8")
 fr = ad.getObject("Refrigerator")
 if fr:
     pl = fr.Placement
-    pl.Base = V(0.0, -5698.4, 0.0)   # into the long-leg run: 1 cabinet from the stove
+    pl.Base = V(0.0, -6723.2, 0.0)   # pushed 1 cabinet toward the end
     fr.Placement = pl
-    L("fridge moved to origin Y=-5698.4")
+    L("fridge moved to origin Y=-6723.2")
 for o in ad.Objects:
     if o.TypeId in ("App::Link", "App::Part") or o.TypeId.startswith("Assembly::"):
         show(o, True)

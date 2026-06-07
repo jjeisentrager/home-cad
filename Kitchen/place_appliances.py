@@ -32,9 +32,9 @@ ROT180 = R(V(0, 0, 1), 180)   # local +Y front -> world -Y  (faces short-side fr
 # name -> (relative FCStd path, friendly Part label, link label, placement)
 APPLIANCES = [
     ("Refrigerator", "LG_LRMXS2806S/LG_LRMXS2806S.FCStd", "Refrigerator",
-        P(V(0.0,     -5698.4, 0.0),   ROT90)),   # 1 cabinet from the stove, in-run
+        P(V(0.0,     -6723.2, 0.0),   ROT90)),   # 2 cabinets from the stove, in-run
     ("Range",        "LRGL5823S/LRGL5823S.FCStd",         "Range_Stove",
-        P(V(0.0,     -3859.2, 0.0),   ROT90)),
+        P(V(0.0,     -3207.8, 0.0),   ROT90)),   # 2 cabinets from the corner
     ("Sink",         "KWT310-33/KWT310-33.FCStd",         "Sink",
         P(V(-1231.9, -25.4,   939.8), ROT180)),
     ("Dishwasher",   "WDP540HAMZ/WDP540HAMZ.FCStd",       "Dishwasher",

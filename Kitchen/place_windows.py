@@ -38,9 +38,12 @@ BLACK = (0.05, 0.05, 0.06, 1.0)     # ThruBlack vinyl
 GLASS = (0.62, 0.74, 0.82, 1.0)     # glazing
 
 # name, rel path, App::Part label, placement
+# WindowWall is centered over the 2 cabinets between the corner and the (relocated)
+# stove (Y center -1524), leaving ~244 mm clearance to the stove hood; downsized to
+# SG4836 (matching the sink window) so it is appropriately spaced from the hood.
 WINDOWS = [
-    ("WindowWall", WIN + "SG6036/ThruBlack_SG6036.FCStd", "ThruBlack_SG6036",
-        P(V(0.0, -2605.45, 1100.0), ROT90)),
+    ("WindowWall", WIN + "SG4836/ThruBlack_SG4836.FCStd", "ThruBlack_SG4836",
+        P(V(0.0, -2127.25, 1100.0), ROT90)),
     ("WindowSink", WIN + "SG4836/ThruBlack_SG4836.FCStd", "ThruBlack_SG4836",
         P(V(-1047.75, 0.0, 1100.0), ROT180)),
 ]
