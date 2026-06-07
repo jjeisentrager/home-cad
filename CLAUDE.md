@@ -76,6 +76,7 @@ AddOn/                  add-on room: framing, floor joists, subfloor, roof
 | `WDP540HAMZ` | Whirlpool WDP540HAMZ | **dishwasher** |
 | `VIKIO-IKP02-30` | VIKIO IKP02-30 | range **hood** |
 | `Edenfield-29004S1` | Ashley Edenfield | **sofa** |
+| `TV-60in` | generic 60" | wall-mount **TV** (big screen) |
 | `ViWinTech/…` | ViWinTech ThruBlack | **windows** (single-hung, glider, 3-lite glider, picture, geometric) + **patio doors** (Grand Vista Traditional & French Sliding) |
 
 ## Component modelling convention
