@@ -4,6 +4,10 @@ Parametric CAD models of the ViWinTech **ThruBlack** series new-construction
 vinyl windows. ThruBlack is ViWinTech's through-color technology — an all-black
 vinyl window, black inside and out, that holds its color over time.
 
+> **Patio doors:** the matching ThruBlack **Grand Vista** sliding patio doors
+> (Traditional Sliding + French Sliding) live in `ThruBlack-TraditionalSliding/`
+> and `ThruBlack-FrenchSliding/` — see [`ThruBlack-Doors-README.md`](ThruBlack-Doors-README.md).
+
 **Source:** ViWinTech 2026 product catalog, *New Construction Windows / ThruBlack*
 (`../../_reference/ViWinTech-2026-ALL-Product-WEB-1.pdf`,
 <https://www.viwintech.com/wp-content/uploads/2019/05/2026-ALL-Product-WEB-1.pdf>).
