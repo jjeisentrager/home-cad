@@ -154,14 +154,17 @@ DR3 = [("drawer", 1, "eq"), ("drawer", 1, "eq"), ("drawer", 1, "eq")]  # 3 drawe
 
 # (name, orient, w0, w1, config, sink_shaft)
 CABS = [
-    # long leg (front -X): w0/w1 are Y, w0 nearer corner (less negative)
+    # long leg (front -X): w0/w1 are Y (w0 = min/far-from-corner, w1 = max).
+    # Layout: corner | L1 L2 L3 | range gap | L4 | fridge gap | L5 L6 L7 | wall.
     ("Cab_L1", "long", -1524.0, -609.6, DD, False),
     ("Cab_L2", "long", -2438.4, -1524.0, DD, False),
     ("Cab_L3", "long", -3090.0, -2438.4, DR3, False),
-    ("Cab_L4", "long", -4784.4, -3870.0, DD, False),
-    ("Cab_L5", "long", -5698.8, -4784.4, D2, False),
-    ("Cab_L6", "long", -6613.2, -5698.8, DD, False),
-    ("Cab_L7", "long", -6959.6, -6613.2, DR3, False),
+    # range gap Y[-3870,-3090]
+    ("Cab_L4", "long", -4784.4, -3870.0, DD, False),   # 1 cabinet stove<->fridge
+    # fridge gap Y[-5704.4,-4784.4]; remaining 3 cabinets beyond the fridge
+    ("Cab_L5", "long", -6466.4, -5704.4, DD, False),
+    ("Cab_L6", "long", -7228.4, -6466.4, D2, False),
+    ("Cab_L7", "long", -7867.6, -7228.4, DR3, False),
     # short leg (front -Y): w0/w1 are X.  DW now sits next to the sink base:
     #   Cab_S1 | SinkBase | DW gap | Cab_S_end
     ("Cab_S1",    "short", -1193.8, -609.6, D1, False),
@@ -205,6 +208,20 @@ for name, rgba in made:
     paint(o, rgba)
     show(o, True)
 
+# countertop: the fridge now sits inside the long-leg run, so extend the black
+# slab over the relocated end cabinets and cut a full gap where the fridge goes.
+top = cd.getObject("CounterTop_Cut")
+tsh = top.Shape.copy()
+ext = box(-660.4, 0.0, -7918.4, -7010.4, 914.4, 939.8)   # end extension (50.8 overhang)
+tsh = tsh.fuse(ext)
+fridge_gap = box(-700.0, 5.0, -5704.4, -4784.4, 913.0, 941.0)
+tsh = tsh.cut(fridge_gap)
+top.Shape = tsh
+top.recompute()
+paint(top, (0.0, 0.0, 0.0, 1.0))   # keep it black
+show(top, True)
+L("countertop bbox now:", top.Shape.BoundBox, "solids=", len(top.Shape.Solids))
+
 # hide the old solid base; keep the black countertop + island
 for nm in ("Body", "Pad", "CounterBase_Cut"):
     if cd.getObject(nm):
@@ -225,6 +242,12 @@ if dw:
     pl.Base = V(-2108.2, 0.0, 0.0)   # max-X edge against the sink base
     dw.Placement = pl
     L("dishwasher moved to origin X=-2108.2")
+fr = ad.getObject("Refrigerator")
+if fr:
+    pl = fr.Placement
+    pl.Base = V(0.0, -5698.4, 0.0)   # into the long-leg run: 1 cabinet from the stove
+    fr.Placement = pl
+    L("fridge moved to origin Y=-5698.4")
 for o in ad.Objects:
     if o.TypeId in ("App::Link", "App::Part") or o.TypeId.startswith("Assembly::"):
         show(o, True)
