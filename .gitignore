@@ -4,3 +4,9 @@
 # Python
 __pycache__/
 *.pyc
+
+# FreeCAD stray duplicate saves (e.g. Foo.FCStd1)
+*.FCStd1
+
+# Scratch / inspection working dir
+_scan/
