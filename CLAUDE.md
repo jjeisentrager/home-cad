@@ -64,8 +64,49 @@ Library/<MODEL>/        one component each (appliances, furniture)
 Library/_reference/     vendor PDFs / spec sources
 Kitchen/                kitchen assemblies + Kitchen_Counter (L-shaped counter+island)
 AddOn/                  add-on room: framing, floor joists, subfloor, roof
+code/                   building/plumbing code references (see below)
 *.FCBak                 FreeCAD backups (git-ignored)
 ```
+
+### Code references (`code/`)
+Regulatory references for design compliance. **For this project (a 1–2 family house),
+the Michigan Residential Code is the controlling document**; the others are the
+backbone / larger-structure references.
+- `Michigan-Residential-Code-2021-reference.md` — **the code that governs this house**
+  (IRC 2021 + MI amendments). Self-contained: building planning (Ch 3: room sizes,
+  ceiling heights, egress, stairs, guards, EERO windows, garage separation, safety
+  glazing, smoke/CO alarms), foundations, floors, walls, roof framing, roof assemblies
+  (ice barrier), chimneys/fireplaces, plus energy/mechanical/plumbing/electrical
+  pointers. Text read openly from UpCodes. Home items flagged 🏠.
+- `Michigan-Building-Code-2021-reference.md` — **Michigan Building Code 2021 (IBC)**,
+  all 35 chapters condensed (occupancy, heights/areas, construction types, fire/smoke,
+  egress, interior environment, structural loads, soils/foundations, wood, glazing,
+  roofs). ⚠️ Does NOT govern detached 1–2 family dwellings (§101.2 → use the Residential
+  Code); use this for larger structures + the structural/material/glazing backbone.
+- `Michigan-Plumbing-Code-2021-reference.md` — condensed quick-reference of the
+  **Michigan Plumbing Code 2021** (IPC 2021 + Michigan Part 7 amendments): fixture
+  clearances, trap/drain sizes, slopes, vent rules, sizing tables. Home-relevant
+  items flagged 🏠. Caveat: detached 1–2 family dwellings actually fall under the
+  Michigan *Residential* Code (mirrors these numbers). Expand from the UpCodes
+  viewer (`up.codes/viewer/michigan/ipc-2021/chapter/<N>/...`) when more detail is needed.
+- `2021-Michigan-Plumbing-Code-Part7-Final-Rules-eff-2024-03-12.pdf` — the official
+  LARA Part 7 amendment rules (the raw Michigan modifications, eff. 2024-03-12).
+- `Michigan-Electrical-Code-2023-reference.md` — condensed reference for the
+  **Michigan Electrical Code 2023 (NEC / NFPA 70-2023)**. ⚠️ Two trust levels: the
+  Michigan Part 8 amendments are quoted from the official LARA PDF (authoritative);
+  the NEC base-code numbers are from Claude's knowledge (UpCodes gates NFPA 70 behind
+  a login, so the text couldn't be scraped) and carry a **verify-before-permit** caveat
+  — items likely to shift each code cycle are tagged "VERIFY". Home-relevant items 🏠.
+- `2023-Michigan-Electrical-Code-Part8-Final-Rules-eff-2024-03-12.pdf` — the official
+  LARA Part 8 amendment rules (adopts NEC 2023 2nd printing + NFPA 110/111 2019; the
+  raw Michigan modifications incl. §230.85 emergency disconnect, §250.104(B) CSST
+  bonding, §334.10 NM-cable uses, eff. 2024-03-12).
+- `NEC-2017-fulltext-public-resource-org.txt` — verbatim full text of **NEC 2017**
+  (Public.Resource.org / Internet Archive `gov.law.nfpa.nec.2017`, incorporated-by-reference,
+  no login). `grep` it for exact NEC wording (OCR, metric-first `762 mm (30 in.)`,
+  hyphenation across lines). The electrical .md's base numbers are cross-checked against
+  it; **MI adopts NEC 2023**, so 2017→2023 dwelling deltas are tagged `[2023 Δ]` (GFCI
+  expansion, 230.85, 230.67 surge) — confirm those via NFPA LiNK / UpCodes (free login).
 
 ### Components in the Library
 | Dir | Model | What |
