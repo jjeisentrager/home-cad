@@ -1,0 +1,4 @@
+GuiUp=1
+Toilet_NorthBath     base=(5627.5, 6334.2, 2603.5) ang=0  resolved=True
+Toilet_InteriorBath  base=(7340.5, 6433.8, 2603.5) ang=180  resolved=True
+Tub_InteriorBath     base=(6545.0, 6344.6, 2603.5) ang=180  resolved=True

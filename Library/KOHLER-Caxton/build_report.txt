@@ -1,0 +1,7 @@
+KOHLER-Caxton K-20000 undermount lavatory (with faucet+handles)
+GuiUp=1
+rim outer W x D (in) = 20.44 x 15.31
+basin L x W x depth (in) = 17.25 x 12.25 x 8.12
+overall bbox X x Y x Z (mm) = 519.1 x 442.8 x 482.6
+overall bbox X x Y x Z (in) = 20.44 x 17.43 x 19.00
+faucet top Z (mm) = 276.2  (10.88 in above rim)

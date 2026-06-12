@@ -4,6 +4,15 @@ FreeCAD models for a home design: appliances/furniture component library plus
 room assemblies (kitchen, add-on). **FreeCAD 1.1**, all geometry in **millimetres**
 (`IN = 25.4`).
 
+## "Quick" mode — skip verification when asked
+
+If the request includes **"quick"** or **"quickly"**, make the change, save/generate
+the file, and stop. **No** before/after renders, previews, bounding-box checks,
+re-opening to verify, or comparison images — just apply the edit and report what you
+did in one or two lines. Still save user-facing files correctly (offscreen GUI so
+`GuiDocument.xml` survives — see below). The user will say if it's wrong and you'll
+fix it then. Without "quick"/"quickly", work normally (verify, render, confirm).
+
 ## Running FreeCAD
 
 FreeCAD is installed as a **flatpak** (no native binary on PATH):
@@ -118,6 +127,8 @@ backbone / larger-structure references.
 | `VIKIO-IKP02-30` | VIKIO IKP02-30 | range **hood** |
 | `Edenfield-29004S1` | Ashley Edenfield | **sofa** |
 | `TV-60in` | generic 60" | wall-mount **TV** (big screen) |
+| `AS-Champion4` | American Standard Champion 4 (767AA001) | elongated chair-height 2-piece **toilet** (12" rough-in, 1.6 GPF) |
+| `Sterling-Medley-6030` | Sterling Medley 30.13×60 | Vikrell alcove soaking **bathtub** (right-hand drain) |
 | `ViWinTech/…` | ViWinTech ThruBlack | **windows** (single-hung, glider, 3-lite glider, picture, geometric) + **patio doors** (Grand Vista Traditional & French Sliding) |
 
 ## Component modelling convention
