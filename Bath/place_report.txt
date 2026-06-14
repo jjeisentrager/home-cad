@@ -1,4 +1,6 @@
 GuiUp=1
-Toilet_NorthBath     base=(5627.5, 6334.2, 2603.5) ang=0  resolved=True
-Toilet_InteriorBath  base=(7340.5, 6433.8, 2603.5) ang=180  resolved=True
+Toilet_NorthBath     base=(5627.5, 6438.9, 2603.5) ang=0  resolved=True
+    outlet world=(5869,6744)  stub=(5869,6639)  dx=0 dy=105 mm
+Toilet_InteriorBath  base=(7340.5, 6337.3, 2603.5) ang=180  resolved=True
+    outlet world=(7099,6032)  stub=(7099,6129)  dx=0 dy=-96 mm
 Tub_InteriorBath     base=(6545.0, 6344.6, 2603.5) ang=180  resolved=True

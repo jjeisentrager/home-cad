@@ -1,0 +1,27 @@
+AddOn kitchen drain reworked to an S-TRAP layout (Drain/DrainAddOn.FCStd).
+Build script: Drain/strap_reroute.py   (run OFFSCREEN GUI, SAVE=1 to persist)
+Detail render: Drain/render_strap_detail.py -> strap_detail_{elev,iso}.png
+
+Flow (world coords, mm):
+  sink strainer
+   -> tailpiece (StraightDropB, vertical, +Z to ~3344)
+   -> DW-branch WYE (reused 'Wye', 45 deg branch -> dishwasher flex hose)
+        wye bottom = trap inlet (13570,13688,3050)
+        wye branch tip (13480,13688,3197) = hose connection
+   -> S-TRAP (baked 'STrap' from lib Body011; inlet 13570, outlet 13367, both vertical)
+        inlet (13570,13688,3050)  outlet (13367,13688,2821)
+   -> vertical DROP through subfloor (Straight001) 2821 -> 2580
+   -> LARGE-SWEEP 90 (baked 'Sweep90', centerline R=140) down -> west
+        entry (13367,13688,2580)  exit (13367,13548,2440)
+   -> west RUN (Straight002) Y 13548 -> 7376 at X=13367, Z=2440
+   -> 90 DOWN elbow (Elbow001) corner (13367,7300,2440)
+   -> basement DROP (Straight) 2338 -> 500   (no tie-in, leave where it lands)
+
+Dishwasher hose: baked 'DWHose' (22mm OD swept tube), high-rise loop peaking
+  ~Z3370 then down to the dishwasher drain ~(12830,13688,2960).
+
+Run shifted +178mm in X (13188.8 -> 13366.8) so the straight-down S-trap sits
+directly under the sink (S-trap inlet->outlet offset is 203.2mm).
+
+Superseded parts HIDDEN (not deleted): PTrap, Elbow002, StraightDW, Elbow(old corner).
+All assembly joints suppressed so manual placements hold.

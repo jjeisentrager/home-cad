@@ -1,0 +1,3 @@
+north dx=-104.5 Base.x=1181.3 stubY=6743.7
+inter dx=96.7 Base.x=1892.5 stubY=6032.5
+Straight009 Base.x=1791.8 southY=6133.2 Pad087=1214.3 northY=7347.5

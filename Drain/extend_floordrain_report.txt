@@ -1,0 +1,13 @@
+GuiUp=1
+Pad035 before: len=6350.00 expr=[('Length', '250 "')]
+Pad035 after : len=7511.29
+DrainLaundry SAVED
+link tx before: 8476.3
+link tx after : 7315.0
+PTrap world  X[14944,15011] Y[7267,7610] Z[377,581]
+NorthDrop wld X[7285,7345] Y[7122,7183] Z[15,320]
+FLOOR HOLE   center(7315,7112) r=254 -> X[7061,7569] Y[6858,7366] slab Z[0,102]
+drop center=(7315,7153)  offset from hole center=41 mm  (must be < 224)
+DROP INSIDE HOLE: True
+PTrap tub target world X~14977 (was ~15016)
+House SAVED

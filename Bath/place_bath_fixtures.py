@@ -36,9 +36,15 @@ house = App.openDocument(os.path.join(R, "House/House.FCStd"))
 asm = house.getObject("Assembly")
 
 PLACEMENTS = [
-    ("Toilet_NorthBath",   toilet_part, V(5627.5, 6334.2, FLOOR), Z(0)),
-    ("Toilet_InteriorBath", toilet_part, V(7340.5, 6433.8, FLOOR), Z(180)),
-    ("Tub_InteriorBath",   tub_part,    V(6545.0, 6344.6, FLOOR), Z(180)),
+    # Toilets seated so the tank back sits at the FINISHED face of the wet wall
+    # (H_p95: centerline Y6388.1, framing faces 6350.0 / 6426.2, +12.7 drywall ->
+    # finished 6337.3 south / 6438.9 north). This gives the AS-Champion4 its full
+    # 12 in (304.8) rough-in per IPC 405.3 and keeps the tank OUT of the wall.
+    # Outlet X stays over the drain stub; outlet Y lands 12 in off the finished
+    # wall (~4 in beyond the stub, which was roughed at ~8 in).
+    ("Toilet_NorthBath",    toilet_part, V(5627.5, 6438.9, FLOOR), Z(0)),
+    ("Toilet_InteriorBath", toilet_part, V(7340.5, 6337.3, FLOOR), Z(180)),
+    ("Tub_InteriorBath",    tub_part,    V(6545.0, 6344.6, FLOOR), Z(180)),
 ]
 
 for name, part, base, rot in PLACEMENTS:
@@ -58,7 +64,9 @@ for name, part, base, rot in PLACEMENTS:
 house.recompute()
 house.save()
 
-# report
+# report -- world outlet of each toilet (local closet 241.5, 304.8) for a
+# clearance sanity check vs the drain stubs.
+STUB = {"Toilet_NorthBath": (5869, 6639), "Toilet_InteriorBath": (7099, 6129)}
 with open(os.path.join(R, "Bath/place_report.txt"), "w") as fh:
     fh.write("GuiUp=%s\n" % App.GuiUp)
     for name, part, base, rot in PLACEMENTS:
@@ -67,4 +75,9 @@ with open(os.path.join(R, "Bath/place_report.txt"), "w") as fh:
                  (name, tuple(round(c, 1) for c in (base.x, base.y, base.z)),
                   rot.Angle * 180 / 3.141592653589793,
                   o is not None and o.LinkedObject is not None))
+        if name in STUB and o is not None:
+            outlet = o.Placement.multVec(V(241.5, 304.8, 0))
+            sx, sy = STUB[name]
+            fh.write("    outlet world=(%.0f,%.0f)  stub=(%d,%d)  dx=%.0f dy=%.0f mm\n"
+                     % (outlet.x, outlet.y, sx, sy, outlet.x - sx, outlet.y - sy))
 print("PLACE_DONE")

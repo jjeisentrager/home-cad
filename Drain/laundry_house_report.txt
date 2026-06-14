@@ -1,0 +1,2 @@
+DrainLaundry link added: True linked=True GuiUp=1
+world bbox X[8443,15011] Y[7120,7744] Z[15,561]

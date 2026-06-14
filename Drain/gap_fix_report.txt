@@ -1,0 +1,3 @@
+Pad087.Length now = 1214.20 (expr=[])
+Straight022 end-face X centers = [674.2334056335667, 1791.7901401715828]  (want a stack end ~577.6)
+Joint034.Suppressed = False

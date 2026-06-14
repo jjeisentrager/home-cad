@@ -4,6 +4,22 @@ FreeCAD models for a home design: appliances/furniture component library plus
 room assemblies (kitchen, add-on). **FreeCAD 1.1**, all geometry in **millimetres**
 (`IN = 25.4`).
 
+## Orientation / compass (world axes)
+
+The side of the house that has the **AddOn is EAST**. Fixing that to **+Y** gives a
+consistent real-world compass for all directions used in tasks:
+
+| Cardinal | World axis | Foundation wall (XY [0,17043]×[0,7925]) |
+|----------|-----------|------------------------------------------|
+| **East**  | **+Y** | Y = 7925 (AddOn side) |
+| **West**  | **−Y** | Y = 0 |
+| **North** | **−X** | X = 0 |
+| **South** | **+X** | X = 17043 |
+
+So the **SE corner** of the basement ≈ world **(X≈17043, Y≈7925)**, the **east wall**
+is the Y≈7925 wall, and "runs **north**" means toward **low X**. The large foundation
+penetration ("the big hole") is in the **north wall (X≈0) at Y≈3500–4500**.
+
 ## "Quick" mode — skip verification when asked
 
 If the request includes **"quick"** or **"quickly"**, make the change, save/generate
@@ -129,6 +145,7 @@ backbone / larger-structure references.
 | `TV-60in` | generic 60" | wall-mount **TV** (big screen) |
 | `AS-Champion4` | American Standard Champion 4 (767AA001) | elongated chair-height 2-piece **toilet** (12" rough-in, 1.6 GPF) |
 | `Sterling-Medley-6030` | Sterling Medley 30.13×60 | Vikrell alcove soaking **bathtub** (right-hand drain) |
+| `Mustee-19` | Mustee Utilatub 19 | 23×23.5 single-basin freestanding **laundry/utility sink** (on legs, w/ drain) |
 | `ViWinTech/…` | ViWinTech ThruBlack | **windows** (single-hung, glider, 3-lite glider, picture, geometric) + **patio doors** (Grand Vista Traditional & French Sliding) |
 
 ## Component modelling convention

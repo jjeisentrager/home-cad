@@ -1,0 +1,3 @@
+DLGX3701W: Part=Part label=DLGX3701W moved=10 children=10 GuiUp=1 bbox=X[0.0,685.8]Y[0.0,768.3]Z[0.0,982.7]
+WM3700HWA: Part=Part label=WM3700HWA moved=7 children=7 GuiUp=1 bbox=X[0.0,685.8]Y[0.0,814.3]Z[0.0,990.6]
+DONE

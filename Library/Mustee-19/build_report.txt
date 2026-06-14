@@ -1,0 +1,5 @@
+Mustee-19 Utilatub laundry/utility sink
+GuiUp=1
+overall W x D x H (in) = 23.00 x 23.50 x 34.00
+overall W x D x H (mm) = 584.2 x 596.9 x 863.6
+rim height (in) = 34.00  basin depth (in) = 13.00
