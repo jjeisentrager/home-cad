@@ -27,7 +27,8 @@ RIDGE_Z = 152.0        # ridge top
 RIDGE_HW = 19.0        # ridge board half width (X[-19,19])
 RD = 184.0             # rafter / ridge depth (2x8, plumb)
 RT = 38.0              # rafter thickness (along Y)
-Y0, Y1 = -8890.0, 0.0  # ridge length span
+Y0, Y1 = -12553.0, 0.0  # ridge length span; Y0 end extended 3663mm (144.21") to
+                        # reach the main-house ridge -> full cross-gable
 SPACING = 406.4        # 16" o.c.
 SLOPE = (RIDGE_Z - (-1905.0)) / (HALF - RIDGE_HW)   # ~0.460 (5.5:12)
 CJ_D = 140.0           # ceiling joist depth (2x6)
@@ -86,9 +87,10 @@ while y >= Y0 - 1e-6:
     y -= SPACING
 solids.append(("CeilingJoists", Part.makeCompound(cj)))
 
-# gable-end studs at Y0 and Y1
+# gable-end studs only at the OUTER end (Y1); the Y0 end now runs into the main
+# roof (cross-gable), so no gable wall there.
 gable = []
-for yend in (Y1 - RT, Y0):
+for yend in (Y1 - RT,):
     x = -WALL_HALF + 600.0
     while x <= WALL_HALF - 600.0:
         ztop = z_top(x) - RD              # underside of rafter at this x
