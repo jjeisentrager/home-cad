@@ -20,6 +20,7 @@ import Part
 import Mesh
 
 V = App.Vector
+ZSHIFT = -280.0        # lower whole roof 280mm (ridge was 11.02" too high vs main)
 HALF = 4489.0          # eave X (half span, incl overhang)
 WALL_HALF = 4064.0     # rafter seat / wall bearing (425 overhang)
 RIDGE_Z = 152.0        # ridge top
@@ -97,6 +98,8 @@ for yend in (Y1 - RT, Y0):
         x += 600.0
 solids.append(("GableStuds", Part.makeCompound(gable)))
 
+# lower the whole roof by ZSHIFT (keeps pitch; matches main-house ridge height)
+solids = [(n, s.translated(V(0, 0, ZSHIFT))) for n, s in solids]
 objs = [add(n, s) for n, s in solids]
 part = doc.addObject("App::Part", "Part")
 part.Label = "RoofFrame"
