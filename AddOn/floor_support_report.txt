@@ -1,0 +1,11 @@
+grade Z=1879.6  joist bottom Z=2362.2  subfloor top Z=2603.5
+beam 3-ply 2x10 PT: 114.3 wide x 285.8 deep, Z[2076.4,2362.2]  (7.75 in over grade)
+beam Y centres: [14040.0, 11008.0]
+joist spans: house(7977)->mid=3031  mid->end=3032  cantilever=-5 mm
+piers: 5 per beam at X=[7412.5, 9371.4, 11330.3, 13289.2, 15248.1]  spacing=1959 mm (6.43 ft)
+pier shaft d=305  Z[1016.0,2051.0]; footing 610 sq x 203, Z[812.8,1016.0] (frost 1067)
+Beam_End       X[7361,15313] Y[13983,14097] Z[2076,2362]
+Beam_Mid       X[7361,15313] Y[10951,11065] Z[2076,2362]
+Piers          X[7260,15400] Y[10856,14192] Z[1016,2051]
+Footings       X[7108,15553] Y[10703,14345] Z[813,1016]
+BearingPlates  X[7324,15337] Y[10919,14129] Z[2051,2076]
