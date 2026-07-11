@@ -1,0 +1,11 @@
+bents=6 at 2510.6 mm (8.24 ft) o.c.  tied bents=3  pitch=5.52:12
+RidgeBeam         solids=  1  X[-102,102] Y[-12553,0] Z[-433,-128]
+PrincipalRafters  solids= 12  X[-4489,4489] Y[-12553,0] Z[-2439,-166]
+TieBeams          solids=  3  X[-4064,4064] Y[-10118,0] Z[-2497,-2243]
+KingPosts         solids=  3  X[-102,102] Y[-10118,0] Z[-2243,-433]
+Struts            solids=  6  X[-2108,2108] Y[-10118,0] Z[-1619,-1264]
+CollarTies        solids=  3  X[-1800,1800] Y[-12553,-2435] Z[-1405,-1202]
+Purlins           solids= 30  X[-4076,4076] Y[-12401,-152] Z[-2350,-927]
+CommonRafters     solids= 20  X[-4489,4489] Y[-11725,-828] Z[-2337,-166]
+GableStuds        solids= 11  X[-3508,3180] Y[-152,-63] Z[-2243,-587]
+TOTAL X[-4489,4489] Y[-12553,0] Z[-2497,-128]

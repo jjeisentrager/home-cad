@@ -20,6 +20,7 @@ FILES = [
     "Main/MainFraming.FCStd",
     "AddOn/AddOn_Beams.FCStd",
     "Main/MainBeams.FCStd",
+    "AddOn/AddOn_RoofFrame.FCStd",   # timber frame -- exposed, so it wants wood
 ]
 
 for rel in FILES:
