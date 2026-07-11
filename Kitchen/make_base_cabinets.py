@@ -155,15 +155,20 @@ DR3 = [("drawer", 1, "eq"), ("drawer", 1, "eq"), ("drawer", 1, "eq")]  # 3 drawe
 # (name, orient, w0, w1, config, sink_shaft)
 CABS = [
     # long leg (front -X): w0/w1 are Y (w0 = min/far-from-corner, w1 = max).
-    # Layout: corner | L1 L2 | range | L3 L4 L5 | fridge | L6 L7 | wall.
-    # (stove pulled 1 cab toward the corner; fridge pushed 1 cab toward the end)
+    # Layout: corner | L1 L2 | range | L3 L4 | fridge | L5 L6 L7 | wall.
+    # The fridge moved one cabinet (914.4 = 36", a full two-door section) toward
+    # the stove, so that 36" SECTION MOVES TO THE OTHER SIDE OF THE FRIDGE: it is
+    # now Cab_L5, between the fridge and the end wall.  The fridge gap moves with
+    # it, so the fridge still lands in a real opening instead of on top of the
+    # casework.
     ("Cab_L1", "long", -1524.0, -609.6, DD, False),
     ("Cab_L2", "long", -2438.4, -1524.0, DD, False),
     # range gap Y[-3218.4,-2438.4]  (2 cabinets corner<->stove)
-    ("Cab_L3", "long", -4132.8, -3218.4, DD, False),   # 3 cabinets stove<->fridge
-    ("Cab_L4", "long", -5047.2, -4132.8, DD, False),
-    ("Cab_L5", "long", -5809.2, -5047.2, D2, False),
-    # fridge gap Y[-6729.2,-5809.2]  (2 cabinets fridge<->wall)
+    ("Cab_L3", "long", -4132.8, -3218.4, DD, False),   # 2 cabinets stove<->fridge
+    ("Cab_L4", "long", -4894.8, -4132.8, D2, False),
+    # fridge gap Y[-5814.8,-4894.8] (920 wide; the fridge is 908, so 6 mm each
+    # side -- it now lines up with the casework)
+    ("Cab_L5", "long", -6729.2, -5814.8, DD, False),   # the relocated 36" section
     ("Cab_L6", "long", -7298.4, -6729.2, D1, False),
     ("Cab_L7", "long", -7867.6, -7298.4, D1, False),
     # short leg (front -Y): w0/w1 are X.  DW now sits next to the sink base:
@@ -217,7 +222,7 @@ slab = cd.getObject("Body001").Shape.copy()
 slab = slab.fuse(box(-660.4, 0.0, -7918.4, -7010.4, 914.4, 939.8))  # end extension
 sink_hole = box(-2060.7, -1241.3, -524.0, -85.6, 913.0, 941.0)
 stove_slot = box(-665.0, 5.0, -3218.4, -2438.4, 913.0, 941.0)        # range gap
-fridge_gap = box(-700.0, 5.0, -6729.2, -5809.2, 913.0, 941.0)        # fridge gap
+fridge_gap = box(-700.0, 5.0, -5814.8, -4894.8, 913.0, 941.0)        # fridge gap
 top.Shape = slab.cut(Part.makeCompound([sink_hole, stove_slot, fridge_gap]))
 top.recompute()
 paint(top, (0.0, 0.0, 0.0, 1.0))   # keep it black
@@ -253,9 +258,9 @@ if rg:
 fr = ad.getObject("Refrigerator")
 if fr:
     pl = fr.Placement
-    pl.Base = V(0.0, -6723.2, 0.0)   # pushed 1 cabinet toward the end
-    fr.Placement = pl
-    L("fridge moved to origin Y=-6723.2")
+    pl.Base = V(0.0, -5808.8, 0.0)   # 1 cabinet (914.4) closer to the stove;
+    fr.Placement = pl                # centres it in the relocated fridge gap
+    L("fridge moved to origin Y=-5808.8")
 for o in ad.Objects:
     if o.TypeId in ("App::Link", "App::Part") or o.TypeId.startswith("Assembly::"):
         show(o, True)
