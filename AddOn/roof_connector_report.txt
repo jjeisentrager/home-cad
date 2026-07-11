@@ -1,0 +1,6 @@
+STICK section (separate assembly piece), 2x10 @ 406.4 o.c., 5.52:12
+local Y[-12553.0,-8533.4] -> world Y[3981.3,8000.9]  (main ridge 3962.5 .. I-beam 8000.9)
+rafters=10
+Ridge           n=  1  X[-19,19] Y[-12553,-8533] Z[-363,-128]
+Rafters         n= 20  X[-4489,4489] Y[-12229,-8533] Z[-2420,-128]
+CeilingJoists   n= 10  X[-4064,4064] Y[-12229,-8533] Z[-2364,-2224]

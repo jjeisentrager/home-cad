@@ -1,11 +1,17 @@
-stick framed: 2x10 rafters @ 406.4 o.c., 5.52:12, ridge board 38 wide
-rafters=26  timber chords=3 (+ the I-beam = 4 chords total)
-chord top (world Z) = 4760.6 ; I-beam soffit = 4686.3, I-beam top = 5041.9
-  chord local Y=  -6516.5 -> world Y=10017.8
-  chord local Y=  -4499.5 -> world Y=12034.8
-  chord local Y=  -2482.5 -> world Y=14051.8
-roof local Y[-12553.0,-2012.3] -> world Y[3981.3,14522.0]  (outboard wall face world 14122 -> 400 overhang)
-Ridge          n=  1  X[-19,19] Y[-12553,-2012] Z[-363,-128]
-Rafters        n= 52  X[-4489,4489] Y[-12210,-2012] Z[-2420,-128]
-BottomChords   n=  3  X[-4064,4064] Y[-6618,-2381] Z[-2478,-2224]
-GableStuds     n= 12  X[-3508,3180] Y[-2527,-2438] Z[-2224,-417]
+TIMBER section: 5 bents at 2017 o.c. (spaced off the I-beam)
+  bent 0 local Y=  -8533.4 world Y=  8000.9  chord=THE I-BEAM  king post=yes
+  bent 1 local Y=  -6516.4 world Y= 10017.9  chord=timber 8x14  king post=yes
+  bent 2 local Y=  -4499.4 world Y= 12034.9  chord=timber 8x14  king post=yes
+  bent 3 local Y=  -2482.4 world Y= 14051.9  chord=timber 8x14  king post=yes
+  bent 4 local Y=   -465.4 world Y= 16068.9  chord=timber 8x14  king post=yes
+chord top world Z=5041.9 (= wall top = I-beam top); bottom 4686.3 (= I-beam soffit)
+chord half-length 3400: rafter soffit there is world Z 5047.1, chord top 5041.9 -> clearance 5.2 mm
+length local Y[-8533.4,0.0] -> world Y[8000.9,16534.3] (overhang past the outboard wall = 2412 mm, over the deck)
+RidgeBeam         n=  1  X[-102,102] Y[-8533,0] Z[-433,-128]
+PrincipalRafters  n= 10  X[-4489,4489] Y[-8533,-389] Z[-2439,-166]
+BottomChords      n=  4  X[-3400,3400] Y[-6618,-364] Z[-2299,-1943]
+KingPosts         n=  5  X[-102,102] Y[-8533,-389] Z[-1943,-433]
+Struts            n= 10  X[-2104,2104] Y[-8533,-389] Z[-1519,-1264]
+Purlins           n= 30  X[-4076,4076] Y[-8457,0] Z[-2350,-927]
+CommonRafters     n= 16  X[-4489,4489] Y[-7870,-1129] Z[-2337,-166]
+GableStuds        n= 10  X[-2908,3180] Y[-2527,-2438] Z[-1943,-587]
