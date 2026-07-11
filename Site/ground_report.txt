@@ -1,0 +1,6 @@
+GRADE = 1879.6  (2603.5 subfloor top - 28.5in)
+bb X[-7000,25000] Y[-7000,23000] Z[600.0,2036.1]  valid=True solids=1
+contour range Z 1735.0 .. 2036.1 (flat = 1879.6 at the buildings)
+  at the AddOn front wall  (11400,14300) -> Z 1879.6
+  at the house SE corner   (17100,7900) -> Z 1879.6
+  out east (deck area)     (18000,12000) -> Z 1867.3
