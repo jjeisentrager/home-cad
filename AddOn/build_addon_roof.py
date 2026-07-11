@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
-"""todo#2: rebuild the AddOn roof as a TIMBER FRAME (heavy exposed timbers) instead
-of a stick-framed 16" o.c. rafter roof.  The main-house roof stays stick-framed;
-only the AddOn is timber frame.
+"""AddOn roof: STICK FRAMED above the chord line (so it matches the main-house
+roof), carried on heavy TIMBER BOTTOM CHORDS -- and the existing steel I-BEAM is
+one of those chords, with the others spaced off it.
 
-The roof ENVELOPE is unchanged from the previous build, so the existing House /
-AddOn_Assembly link (placement untouched) still drops it onto the walls and the
-cross-gable still dies into the main-house ridge:
-  ridge along local Y at X=0, deck plane top Z=152 at the ridge,
-  eave-to-eave X[-4489,4489], length Y[-12553,0], pitch ~5.5:12, then ZSHIFT -280.
+The I-beam (AddOn/AddOn_Beams.FCStd) is the flush beam across the AddOn's open
+side, where the addition meets the house:  world X[7348,15185] Y[7893,8109]
+Z[4686,5042].  It runs in the SAME direction as the roof's bottom chords, so it
+serves as the chord at that end.  Chords are then spaced at equal bays from the
+I-beam centreline (world Y 8000.9) out to the gable wall (world Y 14051.9):
+3 bays of 2017 mm (6'-7"), giving timber chords at world Y 10017.9 / 12034.9 /
+14051.9.  The I-beam itself is NOT redrawn here -- it already exists.
 
-Timber-frame anatomy (classic English purlin frame):
-  * RIDGE BEAM        8x12, top face in the deck plane at the apex.
-  * BENTS at 2511 mm (8'-3") o.c. -- 6 of them, not 16" o.c. sticks.  Each bent is
-    a pair of PRINCIPAL RAFTERS (6x10) with their top faces in the deck plane.
-  * TIE BEAMS (the "bottom chord") 8x10 -- only on EVERY OTHER bent, per the
-    reference.  Those tied bents also get a KING POST and a pair of angled STRUTS.
-  * The untied bents get a COLLAR TIE high up instead, so they still resist spread
-    without a full bottom chord.
-  * PURLINS 6x8 run bay-to-bay between the principal rafters (butting their sides,
-    not passing through them), top face one common-rafter depth below the deck.
-  * COMMON RAFTERS 4x6 at ~600 mm o.c. inside each bay, resting on the purlins and
-    the ridge, tops in the deck plane -- they carry the sheathing.
-  * Gable studs at the outer (Y1) end only; the Y0 end runs into the main roof.
+Frame mapping (measured from House.FCStd, see _scan/roofmap.py):
+    world Y = 16534.31 + localY      world Z = 6985.0 + localZ(final)
+Everything below is built PRE-SHIFT and then translated by ZSHIFT at the end.
 
-Run headless:  freecadcmd build_addon_roof.py    (then color_roof.py offscreen)
+Stick framing matches Main/build_main_roof.py: 2x10 rafters (235 deep, 38 thick)
+at 406.4 (16") o.c. on a 38-wide ridge board, 5.5:12.
+
+ROOF LENGTH FIX: the Y1 end used to run to world Y 16534, i.e. 2.4 m past the
+outboard wall (the main roof only overhangs 400).  Y1 is now set so the roof
+overhangs that wall by 400, like the main roof.  The Y0 end is unchanged -- it
+still dies into the main-house ridge (world Y ~3982 vs the main ridge at 3962.5).
+
+Run headless:  freecadcmd build_addon_roof.py   (then recolor_brown.py offscreen)
 Units: mm.
 """
 import os
@@ -32,148 +32,80 @@ import Part
 
 V = App.Vector
 
-ZSHIFT = -280.0        # lower whole roof (matches main-house ridge height)
-HALF = 4489.0          # eave X (half span, incl. overhang)
-WALL_HALF = 4064.0     # wall bearing / rafter seat
-RIDGE_Z = 152.0        # deck plane height at the ridge
-RIDGE_HW = 101.6       # ridge beam half width (8x12 -> 203 wide)
-RIDGE_D = 305.0        # ridge beam depth (12")
-Y0, Y1 = -12553.0, 0.0
-SLOPE = (RIDGE_Z - (-1905.0)) / (HALF - 19.0)   # 0.4602 -- unchanged pitch
+ZSHIFT = -280.0        # keeps the AddOn ridge level with the main-house ridge
+HALF = 4489.0          # eave X (half span incl. 425 overhang)
+WALL_HALF = 4064.0     # wall bearing
+RIDGE_Z = 152.0        # deck plane at the ridge (pre-shift)
+RIDGE_HW = 19.0        # ridge board half width (38 total) -- as the main roof
+RD = 235.0             # rafter depth: 2x10, as the main roof
+RT = 38.0              # rafter thickness
+SPACING = 406.4        # 16" o.c.
+SLOPE = (RIDGE_Z - (-1905.0)) / (HALF - RIDGE_HW)   # 0.4602 == 5.52:12
 
-NBAY = 5                                   # 6 bents
-BENT_SP = (Y1 - Y0) / NBAY                 # 2510.6 mm o.c.
+# --- length, in roof-local Y (world Y = 16534.31 + localY) -------------------
+Y_WALL_OUT = -2412.3   # outboard wall outer face (world 14122)
+Y1 = Y_WALL_OUT + 400.0            # 400 overhang past it, like the main roof
+Y0 = -12553.0                      # unchanged: dies into the main-house ridge
 
-PR_W = 152.0           # principal rafter thickness along Y (6x10)
-PR_D = 254.0           # principal rafter depth
-PUR_W = 152.0          # purlin (6x8): 152 along the slope, 203 deep
-PUR_D = 203.0
-CR_W = 102.0           # common rafter (4x6)
-CR_D = 152.0
-CR_SP = 600.0
-TIE_W = 203.0          # tie beam 8x10
-TIE_D = 254.0
-KP_W = 203.0           # king post 8x8
-COL_W = 152.0          # collar tie 6x8
-COL_D = 203.0
+# --- bottom chords: heavy timber, spaced off the I-beam ---------------------
+# world Y 8000.9 (the I-BEAM, not drawn here) / 10017.9 / 12034.9 / 14051.9
+CHORD_Y = [-6516.5, -4499.5, -2482.5]   # local Y of the three timber chords
+CHORD_W = 203.0        # 8" along Y
+CHORD_D = 254.0        # 10" deep
+GABLE_Y = -2482.5      # gable wall centreline (the last chord doubles as its tie)
 
 DOC = "AddOn_RoofFrame"
 doc = App.newDocument(DOC)
 
 
 def z_deck(x):
-    """top of the roof deck plane at |x| (the sheathing plane)."""
-    return RIDGE_Z - SLOPE * (abs(x) - 19.0)
+    """top of the sheathing plane at |x|."""
+    return RIDGE_Z - SLOPE * (abs(x) - RIDGE_HW)
 
 
-def slab(sign, y, w, top_off, depth, x_in, x_out):
-    """A member lying ALONG the slope: parallelogram in X-Z (plumb cut faces)
-    whose top edge sits `top_off` below the deck plane, extruded `w` along +Y."""
-    xi, xo = sign * x_in, sign * x_out
-    pts = [V(xi, y, z_deck(x_in) - top_off),
-           V(xo, y, z_deck(x_out) - top_off),
-           V(xo, y, z_deck(x_out) - top_off - depth),
-           V(xi, y, z_deck(x_in) - top_off - depth)]
-    return Part.Face(Part.makePolygon(pts + [pts[0]])).extrude(V(0, w, 0))
+def rafter(sign, y):
+    """one rafter: parallelogram in X-Z (plumb cuts) extruded RT along +Y."""
+    xi, xo = sign * RIDGE_HW, sign * HALF
+    zi, zo = RIDGE_Z, z_deck(HALF)
+    pts = [V(xi, y, zi), V(xo, y, zo), V(xo, y, zo - RD), V(xi, y, zi - RD)]
+    return Part.Face(Part.makePolygon(pts + [pts[0]])).extrude(V(0, RT, 0))
 
 
 solids = []
 
-# --- ridge beam: top face in the deck plane at the apex ----------------------
-solids.append(("RidgeBeam", Part.makeBox(2 * RIDGE_HW, Y1 - Y0, RIDGE_D,
-                                         V(-RIDGE_HW, Y0, RIDGE_Z - RIDGE_D))))
+# --- ridge board -------------------------------------------------------------
+solids.append(("Ridge", Part.makeBox(2 * RIDGE_HW, Y1 - Y0, RD,
+                                     V(-RIDGE_HW, Y0, RIDGE_Z - RD))))
 
-bent_y = [Y1 - i * BENT_SP for i in range(NBAY + 1)]   # 0 .. -12553
+# --- rafters, 16" o.c., both slopes -----------------------------------------
+rafters = []
+y = Y1
+while y >= Y0 - 1e-6:
+    yy = max(y - RT, Y0)
+    rafters.append(Part.makeCompound([rafter(+1, yy), rafter(-1, yy)]))
+    y -= SPACING
+solids.append(("Rafters", Part.makeCompound(rafters)))
 
-seat_z = z_deck(WALL_HALF)          # deck height over the wall
-tie_top = seat_z - PR_D             # tie beam tucks under the principal rafters
+# --- bottom chords: tuck under the rafter feet -------------------------------
+chord_top = z_deck(WALL_HALF) - RD       # underside of the rafters at the wall
+chords = []
+for cy in CHORD_Y:
+    chords.append(Part.makeBox(2 * WALL_HALF, CHORD_W, CHORD_D,
+                               V(-WALL_HALF, cy - CHORD_W / 2.0,
+                                 chord_top - CHORD_D)))
+solids.append(("BottomChords", Part.makeCompound(chords)))
 
-principals, ties, kings, struts, collars = [], [], [], [], []
-
-for i, yc in enumerate(bent_y):
-    y = min(max(yc - PR_W / 2.0, Y0), Y1 - PR_W)      # keep inside the length
-    for s in (+1, -1):
-        principals.append(slab(s, y, PR_W, 0.0, PR_D, RIDGE_HW, HALF))
-
-    tied = (i % 2 == 0)             # bottom chord on every OTHER bent only
-    if tied:
-        ties.append(Part.makeBox(2 * WALL_HALF, PR_W, TIE_D,
-                                 V(-WALL_HALF, y, tie_top - TIE_D)))
-        # king post: tie beam top -> underside of the ridge beam
-        kp_top = RIDGE_Z - RIDGE_D
-        kings.append(Part.makeBox(KP_W, PR_W, kp_top - tie_top,
-                                  V(-KP_W / 2.0, y, tie_top)))
-        # struts: king post -> principal rafter, ~45 deg
-        for s in (+1, -1):
-            x0 = s * KP_W / 2.0
-            z0 = tie_top + 700.0
-            x1 = s * 2100.0
-            z1 = z_deck(2100.0) - PR_D
-            d = V(x1 - x0, 0, z1 - z0)
-            n = (d.x ** 2 + d.z ** 2) ** 0.5
-            px, pz = -d.z / n * 76.0, d.x / n * 76.0     # 152 thick strut
-            pts = [V(x0 + px, y, z0 + pz), V(x1 + px, y, z1 + pz),
-                   V(x1 - px, y, z1 - pz), V(x0 - px, y, z0 - pz)]
-            struts.append(Part.Face(Part.makePolygon(pts + [pts[0]]))
-                          .extrude(V(0, PR_W, 0)))
-    else:
-        # untied bent: collar tie only (no bottom chord)
-        col_z = z_deck(1800.0) - PR_D
-        collars.append(Part.makeBox(2 * 1800.0, PR_W, COL_D,
-                                    V(-1800.0, y, col_z - COL_D)))
-
-solids.append(("PrincipalRafters", Part.makeCompound(principals)))
-solids.append(("TieBeams", Part.makeCompound(ties)))
-solids.append(("KingPosts", Part.makeCompound(kings)))
-solids.append(("Struts", Part.makeCompound(struts)))
-solids.append(("CollarTies", Part.makeCompound(collars)))
-
-# --- purlins: bay-by-bay, butting the sides of the principal rafters ---------
-# top face one common-rafter depth below the deck, so the commons land on them.
-PUR_X = [1500.0, 2800.0, 4000.0]        # up-slope positions (horizontal run)
-purlins = []
-for b in range(NBAY):
-    ya = bent_y[b] - PR_W / 2.0         # near face of this bent's principal
-    yb = bent_y[b + 1] + PR_W / 2.0     # far face of the next one
-    if b == 0:
-        ya = Y1 - PR_W
-    if b == NBAY - 1:
-        yb = Y0 + PR_W
-    ylen = ya - yb
-    for s in (+1, -1):
-        for px in PUR_X:
-            purlins.append(slab(s, yb, ylen, CR_D, PUR_D,
-                                px - PUR_W / 2.0, px + PUR_W / 2.0))
-solids.append(("Purlins", Part.makeCompound(purlins)))
-
-# --- common rafters: inside each bay, tops in the deck plane -----------------
-commons = []
-for b in range(NBAY):
-    ya = bent_y[b] - PR_W / 2.0
-    yb = bent_y[b + 1] + PR_W / 2.0
-    n = int((ya - yb) / CR_SP)
-    if n < 1:
-        continue
-    step = (ya - yb - CR_W) / n
-    for k in range(1, n):
-        y = yb + k * step
-        for s in (+1, -1):
-            commons.append(slab(s, y, CR_W, 0.0, CR_D, RIDGE_HW, HALF))
-solids.append(("CommonRafters", Part.makeCompound(commons)))
-
-# --- gable studs at the outer end only --------------------------------------
+# --- gable studs on the outboard wall (its chord is the tie) -----------------
 gable = []
-yend = Y1 - PR_W
 x = -WALL_HALF + 600.0
 while x <= WALL_HALF - 600.0:
-    ztop = z_deck(x) - PR_D
-    zbot = tie_top
-    if ztop - zbot > 50 and abs(x) > KP_W:
-        gable.append(Part.makeBox(89.0, 89.0, ztop - zbot, V(x - 44.5, yend, zbot)))
+    ztop = z_deck(x) - RD
+    if ztop - chord_top > 50:
+        gable.append(Part.makeBox(89.0, 89.0, ztop - chord_top,
+                                  V(x - 44.5, GABLE_Y - 44.5, chord_top)))
     x += 600.0
 solids.append(("GableStuds", Part.makeCompound(gable)))
 
-# lower the whole roof (keeps pitch; matches main-house ridge height)
 solids = [(n, s.translated(V(0, 0, ZSHIFT))) for n, s in solids]
 
 
@@ -194,16 +126,20 @@ OUT = os.path.dirname(os.path.abspath(__file__))
 doc.saveAs(os.path.join(OUT, DOC + ".FCStd"))
 
 rep = open(os.path.join(OUT, "roof_report.txt"), "w")
-rep.write("bents=%d at %.1f mm (%.2f ft) o.c.  tied bents=%d  pitch=%.2f:12\n"
-          % (len(bent_y), BENT_SP, BENT_SP / 304.8, len(ties), SLOPE * 12))
+rep.write("stick framed: 2x10 rafters @ %.1f o.c., %.2f:12, ridge board %.0f wide\n"
+          % (SPACING, SLOPE * 12, 2 * RIDGE_HW))
+rep.write("rafters=%d  timber chords=%d (+ the I-beam = 4 chords total)\n"
+          % (len(rafters), len(CHORD_Y)))
+rep.write("chord top (world Z) = %.1f ; I-beam soffit = 4686.3, I-beam top = 5041.9\n"
+          % (chord_top + ZSHIFT + 6985.0))
+for cy in CHORD_Y:
+    rep.write("  chord local Y=%9.1f -> world Y=%.1f\n" % (cy, 16534.31 + cy))
+rep.write("roof local Y[%.1f,%.1f] -> world Y[%.1f,%.1f]  (outboard wall face "
+          "world 14122 -> 400 overhang)\n" % (Y0, Y1, 16534.31 + Y0, 16534.31 + Y1))
 for o in objs:
     b = o.Shape.BoundBox
-    rep.write("%-17s solids=%3d  X[%.0f,%.0f] Y[%.0f,%.0f] Z[%.0f,%.0f]\n"
+    rep.write("%-14s n=%3d  X[%.0f,%.0f] Y[%.0f,%.0f] Z[%.0f,%.0f]\n"
               % (o.Name, len(o.Shape.Solids), b.XMin, b.XMax, b.YMin, b.YMax,
                  b.ZMin, b.ZMax))
-comp = Part.makeCompound([o.Shape for o in objs])
-b = comp.BoundBox
-rep.write("TOTAL X[%.0f,%.0f] Y[%.0f,%.0f] Z[%.0f,%.0f]\n"
-          % (b.XMin, b.XMax, b.YMin, b.YMax, b.ZMin, b.ZMax))
 rep.close()
-print("ADDON_TIMBER_ROOF_DONE")
+print("ADDON_ROOF_DONE")

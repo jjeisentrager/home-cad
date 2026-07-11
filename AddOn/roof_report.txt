@@ -1,11 +1,11 @@
-bents=6 at 2510.6 mm (8.24 ft) o.c.  tied bents=3  pitch=5.52:12
-RidgeBeam         solids=  1  X[-102,102] Y[-12553,0] Z[-433,-128]
-PrincipalRafters  solids= 12  X[-4489,4489] Y[-12553,0] Z[-2439,-166]
-TieBeams          solids=  3  X[-4064,4064] Y[-10118,0] Z[-2497,-2243]
-KingPosts         solids=  3  X[-102,102] Y[-10118,0] Z[-2243,-433]
-Struts            solids=  6  X[-2108,2108] Y[-10118,0] Z[-1619,-1264]
-CollarTies        solids=  3  X[-1800,1800] Y[-12553,-2435] Z[-1405,-1202]
-Purlins           solids= 30  X[-4076,4076] Y[-12401,-152] Z[-2350,-927]
-CommonRafters     solids= 20  X[-4489,4489] Y[-11725,-828] Z[-2337,-166]
-GableStuds        solids= 11  X[-3508,3180] Y[-152,-63] Z[-2243,-587]
-TOTAL X[-4489,4489] Y[-12553,0] Z[-2497,-128]
+stick framed: 2x10 rafters @ 406.4 o.c., 5.52:12, ridge board 38 wide
+rafters=26  timber chords=3 (+ the I-beam = 4 chords total)
+chord top (world Z) = 4760.6 ; I-beam soffit = 4686.3, I-beam top = 5041.9
+  chord local Y=  -6516.5 -> world Y=10017.8
+  chord local Y=  -4499.5 -> world Y=12034.8
+  chord local Y=  -2482.5 -> world Y=14051.8
+roof local Y[-12553.0,-2012.3] -> world Y[3981.3,14522.0]  (outboard wall face world 14122 -> 400 overhang)
+Ridge          n=  1  X[-19,19] Y[-12553,-2012] Z[-363,-128]
+Rafters        n= 52  X[-4489,4489] Y[-12210,-2012] Z[-2420,-128]
+BottomChords   n=  3  X[-4064,4064] Y[-6618,-2381] Z[-2478,-2224]
+GableStuds     n= 12  X[-3508,3180] Y[-2527,-2438] Z[-2224,-417]
