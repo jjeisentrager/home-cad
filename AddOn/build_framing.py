@@ -43,7 +43,12 @@ WALLS = [
 OPENINGS = {
     "Wall_Front": [
         (1651.0, 1371.0, 1018.0, 2084.0, False),   # WindowSink
-        (4400.0, 1980.0,    0.0, 2110.0, True),    # Slider (patio door)
+        (4520.5, 1980.0,    0.0, 2110.0, True),    # Slider (patio door) -- was
+        # 4400.0; nudged 120.5 mm toward the window so the slider clears the
+        # counter.  Wall-local x runs OPPOSITE world X, so +120.5 here = -120.5
+        # world X.  This centres the slider in the window..counter run, giving
+        # 89.5 mm (3.5") each side -- the run only has 179 mm of slack total, so
+        # a full 4" on both sides does not fit.
         (6273.8, 1371.0, 1018.0, 2084.0, False),   # WindowFrontLeft
     ],
     "Wall_Right": [
