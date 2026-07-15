@@ -1,0 +1,5 @@
+outlet part=Part  switch part=Part
+Main_Electrical saved with 2 devices
+  Switch_FridgeR  native X[6723,6808] Y[2165,2235] Z[1163,1277]
+  Outlet_FridgeB  native X[6737,6808] Y[2915,2985] Z[993,1107]
+Electrical link in Main.FCStd  frame X[15245,15329] Y[6127,6947] Z[1006,1290]

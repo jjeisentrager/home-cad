@@ -80,13 +80,12 @@ DEVICES = [
     # low appliance receptacles the stove + fridge plug into (behind each).
     ("Outlet_StoveLow",  "outlet", "east", -2828.0, 300.0),
     ("Outlet_FridgeLow", "outlet", "east", -5355.0, 300.0),
-    # counter receptacles flanking the fridge (one on either side).
+    # counter receptacle on the LEFT/+Y side of the fridge.
     ("Outlet_FridgeA", "outlet", "east", -4750.0, 1050.0),
-    # FridgeB (right/-Y side) pulled a bit further off the fridge.
-    ("Outlet_FridgeB", "outlet", "east", -5910.0, 1050.0),
-    # switch to the RIGHT of the fridge (-Y, toward the west-wall corner), kept
-    # ON the wall near its end (wall stops at Y -6007) rather than past it.
-    ("Switch_FridgeR", "switch", "east", -5980.0, 1220.0),
+    # NOTE: the switch + right-side receptacle that used to sit past the fridge
+    # (Switch_FridgeR / Outlet_FridgeB) moved to Main/build_main_electrical.py --
+    # that wall continues past the AddOn's open end (Y -6007) into the Main
+    # structure (partition V_p267), so those devices belong to Main_Electrical.
     # FRONT wall = sink + slider: one countertop GFCI by sink, switch by slider
     ("Outlet_F1", "outlet", "front", -700.0, 1050.0),
     ("Switch_Slider", "switch", "front", -2650.0, 1220.0),
