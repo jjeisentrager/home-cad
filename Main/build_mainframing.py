@@ -51,8 +51,11 @@ WALLS = [
     # North wall is split by the AddOn opening: the studs are removed across the
     # AddOn's open side (world X 7348..15313 -> local x -46.2..267.4 in), where
     # the AddOn's I-beam carries the load. Two segments flank the opening.
-    ("Ext_North_W", "H", 154.0, -333.5, -46.2, 4.0),
-    ("Ext_North_E", "H", 154.0,  267.4, 333.5, 4.0),
+    # The west segment is ALSO broken for a patio-slider rough opening onto the
+    # deck (world X 1019..3007 -> local x -295.4..-217.1 in); Slider_Deck fills it.
+    ("Ext_North_W",  "H", 154.0, -333.5, -295.4, 4.0),
+    ("Ext_North_Wb", "H", 154.0, -217.1,  -46.2, 4.0),
+    ("Ext_North_E",  "H", 154.0,  267.4,  333.5, 4.0),
 
     # Interior partitions (3"), vertical runs
     ("V_n176_a", "V", -176.0, -29.0,  10.0, 3.0),

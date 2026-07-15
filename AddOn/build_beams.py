@@ -2,8 +2,8 @@
 """
 Build the structural beam line for the AddOn's OPEN wall (the studless side where
 the addition meets the original house): a flush steel I-beam carrying the roof,
-plus three 6x6 wood support posts (one at each end + one in the middle aligned
-behind the passage to the slider).
+plus four 6x6 wood support posts: one flush at each end (the east one tucked
+behind the fridge at the X=0 corner) and two evenly spaced in the middle.
 
 These are modelled in the KITCHEN-NATIVE coordinate frame (the same frame the
 kitchen uses inside AddOn_Assembly): X = along the open wall, Y = depth (open
@@ -25,7 +25,6 @@ Y_OPEN = -6007.0         # open-wall centerline (framing native ~ -6096 + offset
 CEIL = 96.0 * IN         # 2438.4
 X_E = 0.0                # east end (stove-wall corner)
 X_W = -7836.0            # west end (opposite-stove wall)
-X_MID = -3833.0          # middle: behind the passage to the slider
 
 # --- I-beam (steel W-section, ~14") ----------------------------------------
 BEAM_DEPTH = 14.0 * IN   # 355.6
@@ -59,12 +58,19 @@ web = box(LEN, WEB_T, BEAM_DEPTH - 2 * FLANGE_T, X_W, Y_OPEN - WEB_T / 2.0,
 add("IBeam", bot.fuse(top).fuse(web))
 
 py = Y_OPEN - POST / 2.0
-# East post sits just inboard of the fridge (which straddles the open wall at the
-# X=0 corner and passes into the old house); the beam still bears on the corner.
-X_PE = -1170.0
-add("Post_East", box(POST, POST, POST_TOP, X_PE, py, 0.0))
-add("Post_Mid", box(POST, POST, POST_TOP, X_MID - POST / 2.0, py, 0.0))
-add("Post_West", box(POST, POST, POST_TOP, X_W, py, 0.0))
+# Four posts under the beam: one flush at each END (the east one tucks BEHIND the
+# fridge at the X=0 corner, so it is hidden), plus TWO evenly spaced in the middle.
+# The end posts bear on the building corners; the two middle posts break up the
+# 7836 mm (25'-9") open span into four equal bays.
+x_east = X_E - POST          # -139.7  flush at the east end, behind the fridge
+x_west = X_W                 # -7836   flush at the west corner
+c_east = x_east + POST / 2.0
+c_west = x_west + POST / 2.0
+step = (c_east - c_west) / 3.0
+POST_C = [c_east - i * step for i in range(4)]        # east -> west, even spacing
+POST_NAMES = ["Post_East", "Post_Mid1", "Post_Mid2", "Post_West"]
+for nm, cx in zip(POST_NAMES, POST_C):
+    add(nm, box(POST, POST, POST_TOP, cx - POST / 2.0, py, 0.0))
 
 part = doc.addObject("App::Part", "Beams")
 part.Label = "Beams"
@@ -78,6 +84,6 @@ feats = [o for o in doc.Objects if o.TypeId.startswith("Part::")]
 Part.export(feats, os.path.join(OUT, DOC + ".step"))
 Mesh.Mesh(Part.makeCompound([o.Shape for o in feats]).tessellate(1.0)).write(
     os.path.join(OUT, DOC + ".stl"))
-print("I-beam span (mm) = %.1f  posts at X = %.0f, %.0f, %.0f" %
-      (LEN, X_E, X_MID, X_W))
+print("I-beam span (mm) = %.1f  %d posts at X = %s" %
+      (LEN, len(POST_C), ", ".join("%.0f" % c for c in POST_C)))
 print("BEAMS_DONE")

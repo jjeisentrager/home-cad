@@ -27,9 +27,10 @@ chord at Z 5041.9 would poke out through the roof.  The chords are therefore
 SHORTENED to |x| <= 3400 (6800 long instead of 8128), which keeps their top
 corners under the rafter soffit (clearance 5.2 mm at the end).
 
-OVERHANG: the Y1 end runs out to local Y 0 = world Y 16534, i.e. 2412 mm past the
-outboard wall, sheltering the deck.  (An earlier commit wrongly trimmed this to
-400 mm.)  The Y0 end of the TIMBER section stops at the I-beam.
+OVERHANG: the Y1 end runs out to world Y 18170, LINED UP WITH THE DECK'S OUTBOARD
+EDGE -- i.e. 4048 mm past the outboard wall, sheltering the deck as a porch roof.
+The extended overhang is carried by 6x6 posts standing on the deck (see
+build_deck_posts.py).  The Y0 end of the TIMBER section stops at the I-beam.
 
 Run headless:  freecadcmd build_addon_roof.py   (then recolor_brown.py offscreen)
 Units: mm.
@@ -73,13 +74,20 @@ CHORD_HALF = 3400.0                       # shortened -- see the note above
 # --- bents, spaced off the I-beam -------------------------------------------
 IBEAM_WY = 8000.9
 BENT_SP = 2017.0
-BENT_WY = [IBEAM_WY + i * BENT_SP for i in range(5)]   # 8000.9 .. 16068.9
-BENT_Y = [wy - W2L_Y for wy in BENT_WY]                # local
-IBEAM_LY = BENT_Y[0]
 
-Y1 = 0.0                # deck-side eave: 2412 past the outboard wall
-Y0 = IBEAM_LY           # the timber section stops at the I-beam
-GABLE_Y = 14051.9 - W2L_Y     # outboard wall centreline
+# Extend the roof so its deck-side eave LINES UP WITH THE DECK'S OUTBOARD EDGE
+# (world Y 18170), ~1.6 m (5.4 ft) past the old eave at world Y 16534.  Bents keep
+# marching out from the I-beam at 2017 o.c.; the last one lands just inside the new
+# eave, out over the deck, and carries the 6x6 posts that stand on the decking.
+DECK_EDGE_WY = 18170.0
+Y1 = DECK_EDGE_WY - W2L_Y      # 1635.7 -- deck-side eave (was 0.0 = world 16534)
+Y0 = IBEAM_WY - W2L_Y          # the timber section stops at the I-beam
+GABLE_Y = 14051.9 - W2L_Y      # outboard wall centreline (gable end stays at the wall)
+
+NBENTS = int((DECK_EDGE_WY - IBEAM_WY) / BENT_SP) + 1   # out to the new eave -> 6
+BENT_WY = [IBEAM_WY + i * BENT_SP for i in range(NBENTS)]  # 8000.9 .. 18085.9
+BENT_Y = [wy - W2L_Y for wy in BENT_WY]                    # local
+IBEAM_LY = BENT_Y[0]
 
 DOC = "AddOn_RoofFrame"
 doc = App.newDocument(DOC)

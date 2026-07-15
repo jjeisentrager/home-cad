@@ -1,0 +1,6 @@
+deck top Z=2578.1  post section 139.7 (6x6)
+4 posts under chords past the outboard wall (Y>14122):
+  DeckPost1  X[8020,8160] Y[15999,16139] Z[2578,4686]  H=2108
+  DeckPost2  X[8034,8173] Y[18016,18156] Z[2578,4686]  H=2108
+  DeckPost3  X[14682,14822] Y[15999,16139] Z[2578,4686]  H=2108
+  DeckPost4  X[14695,14835] Y[18016,18156] Z[2578,4686]  H=2108
