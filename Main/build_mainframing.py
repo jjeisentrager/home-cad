@@ -149,6 +149,22 @@ for name, orient, center, lo, hi, thick in WALLS:
     o.Label = name
     objs.append(o)
 
+# --- header over the patio-slider rough opening (the Ext_North_W gap) --------
+# The slider (Slider_Deck, off the master bedroom) leaves a full-height gap; this
+# beam fills from the slider head up to the underside of the top plate so the
+# opening reads as a proper framed door head.
+HDR_LO, HDR_HI = -295.4, -217.1         # opening span (in), matches the wall split
+HDR_CY = 154.0                          # north/deck wall centreline
+HDR_T = 4.0                             # exterior wall thickness (in)
+HDR_Z0 = 2095.5                         # slider head = door top, mm above the floor
+HDR_Z1 = WALL_HEIGHT - PLATE_T          # up to the underside of the top plate
+hdr = box((HDR_HI - HDR_LO) * IN, HDR_T * IN, HDR_Z1 - HDR_Z0,
+          HDR_LO * IN, (HDR_CY - HDR_T / 2.0) * IN, HDR_Z0)
+oh = doc.addObject("Part::Feature", "Header_Slider")
+oh.Shape = hdr
+oh.Label = "Header_Slider"
+objs.append(oh)
+
 # Group under an App::Part whose internal Name is "Part" -- House.FCStd and
 # Basement.FCStd link to this file by object name "Part" (label MainFraming).
 part = doc.addObject("App::Part", "Part")

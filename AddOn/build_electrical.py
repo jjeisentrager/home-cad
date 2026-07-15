@@ -69,12 +69,24 @@ def place(wall, along, height):
 
 
 # name, kind, wall, along-wall position (native), height AFF
+# EAST wall = kitchen counter long side (window Y -756..-2115, stove Y -2449..
+# -3208, fridge Y -4901..-5809).  Facing this wall (+X), "right" = -Y.
 DEVICES = [
-    # EAST wall = kitchen counter long side -> countertop GFCI + far general
     ("Outlet_E1", "outlet", "east",  -600.0, 1050.0),
-    ("Outlet_E2", "outlet", "east", -1900.0, 1050.0),
+    # E2 was inside the stove window (Y -1900); moved just RIGHT of the window,
+    # into the counter between the window and the stove.
+    ("Outlet_E2", "outlet", "east", -2250.0, 1050.0),
     ("Outlet_E3", "outlet", "east", -3100.0, 1050.0),
-    ("Outlet_E4", "outlet", "east", -5400.0,  300.0),
+    # low appliance receptacles the stove + fridge plug into (behind each).
+    ("Outlet_StoveLow",  "outlet", "east", -2828.0, 300.0),
+    ("Outlet_FridgeLow", "outlet", "east", -5355.0, 300.0),
+    # counter receptacles flanking the fridge (one on either side).
+    ("Outlet_FridgeA", "outlet", "east", -4750.0, 1050.0),
+    # FridgeB (right/-Y side) pulled a bit further off the fridge.
+    ("Outlet_FridgeB", "outlet", "east", -5910.0, 1050.0),
+    # switch to the RIGHT of the fridge (-Y, toward the west-wall corner), kept
+    # ON the wall near its end (wall stops at Y -6007) rather than past it.
+    ("Switch_FridgeR", "switch", "east", -5980.0, 1220.0),
     # FRONT wall = sink + slider: one countertop GFCI by sink, switch by slider
     ("Outlet_F1", "outlet", "front", -700.0, 1050.0),
     ("Switch_Slider", "switch", "front", -2650.0, 1220.0),
