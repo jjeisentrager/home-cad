@@ -105,8 +105,12 @@ WHITE = (0.93, 0.93, 0.93)
 DARK = (0.12, 0.12, 0.14)
 
 # ---- base cabinets (runs beyond the corner) ----
+# the two corner-flanking cabinets get full-height doors (no drawer), matching
+# the corner cabinet, so the whole corner cluster is drawer-free.
+NO_DRAWER = {"B-F-21", "B-E-36"}
 for cid, lbl, wall, a0, a1 in L.BASE:
-    add(cid, cabinet(wall, a0, a1, L.BASE_Z0, L.BASE_Z1, L.BASE_D, True, "sink" in cid), WHITE)
+    doors_only = ("sink" in cid) or (cid in NO_DRAWER)
+    add(cid, cabinet(wall, a0, a1, L.BASE_Z0, L.BASE_Z1, L.BASE_D, True, doors_only), WHITE)
 
 # ---- corner base cabinet: 24" square carcass, an equal-width door on BOTH walls
 # (symmetric -- a cabinet face on the front wall AND the stove wall) ----
@@ -126,14 +130,19 @@ add("U-CNR", diagonal(L.UP_LEG, L.UP_D, L.UP_Z0, L.UP_Z1), WHITE)
 for cid, lbl, wall, a0, a1 in L.OVERFRIDGE:
     add(cid, cabinet(wall, a0, a1, L.OF_Z0, L.OF_Z1, L.OF_D, False, False), WHITE)
 
-# ---- countertop slab ----
+# ---- countertop slab, with a hole cut over the sink so the bowl shows through ----
+# Sink footprint (kitchen-native) X[-2070,-1232] Y[-584,-25]; inset ~40 mm for the
+# rim ledge, cut clear through the 64 mm top.
+sink_hole = box(758.0, 479.0, L.CT_Z1 - L.CT_Z0 + 12.0, -2030.0, -544.0, L.CT_Z0 - 6.0)
 ct = []
 for wall, a0, a1 in L.COUNTER:
     amin, amax = sorted([a0, a1])
     if wall == "east":
-        ct.append(box(L.CT_D, amax - amin, L.CT_Z1 - L.CT_Z0, -L.CT_D, amin, L.CT_Z0))
+        seg = box(L.CT_D, amax - amin, L.CT_Z1 - L.CT_Z0, -L.CT_D, amin, L.CT_Z0)
     else:
-        ct.append(box(amax - amin, L.CT_D, L.CT_Z1 - L.CT_Z0, amin, -L.CT_D, L.CT_Z0))
+        seg = box(amax - amin, L.CT_D, L.CT_Z1 - L.CT_Z0, amin, -L.CT_D, L.CT_Z0)
+        seg = seg.cut(sink_hole)          # front segment holds the sink
+    ct.append(seg)
 add("Countertop", [Part.makeCompound(ct)], DARK)
 
 # ---- wrap + colour + save ----

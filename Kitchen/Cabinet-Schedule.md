@@ -6,10 +6,10 @@ Real cabinet units (carcass + doors) in `Kitchen/Kitchen_Cabinets.FCStd`. Standa
 |---|---------|------|-----------|-------|----------|
 | 1 | B-Cnr-F | BASE | 24 × 34.5 × 24 | 1 full-height door | Corner — 24" door on the FRONT wall |
 | 2 | B-Cnr-E | BASE | 24 × 34.5 × 24 | 1 full-height door | Corner — 24" door on the STOVE wall |
-| 3 | B-F-21 | BASE | 21 × 34.5 × 24 | drawer + 1 door | Front wall — corner→sink |
-| 4 | B-F-sink | BASE | 36 × 34.5 × 24 | 2 doors (no drawer) | Front wall — under sink window |
+| 3 | B-F-21 | BASE | 21 × 34.5 × 24 | 1 full-height door (no drawer) | Front wall — flanks corner |
+| 4 | B-F-sink | BASE | 36 × 34.5 × 24 | 2 full-height doors (no drawer) | Front wall — under sink window |
 | 5 | B-F-15 | BASE | 15 × 34.5 × 24 | drawer + 1 door | Front wall — end, next to slider |
-| 6 | B-E-36 | BASE | 36 × 34.5 × 24 | drawer + 2 doors | Stove wall — corner→range |
+| 6 | B-E-36 | BASE | 36 × 34.5 × 24 | 2 full-height doors (no drawer) | Stove wall — flanks corner |
 | 7 | B-E-36c | BASE | 36 × 34.5 × 24 | drawer + 2 doors | Stove wall — corner→range |
 | 8 | B-E-36b | BASE | 36 × 34.5 × 24 | drawer + 2 doors | Stove wall — range→fridge |
 | 9 | B-E-30 | BASE | 30 × 34.5 × 24 | drawer + 2 doors | Stove wall — range→fridge |
@@ -28,8 +28,9 @@ Real cabinet units (carcass + doors) in `Kitchen/Kitchen_Cabinets.FCStd`. Standa
 | 22 | U-E-OF | WALL | 36 × 24 × 24 | 2 doors | Stove wall — over the refrigerator |
 
 ### Notes
-- **Lower corner:** 24" square corner base cabinet, an equal 24" **full-height door** on each wall (`B-Cnr-F`/`B-Cnr-E`) — no drawer.
-- **West of the fridge:** the run continues to the end of the wall — base `B-E-f36`/`f30`/`f15` and matching uppers `U-E-f36`/`f30`/`f15`, with the countertop extended (into the Main-side V_p267 wall).
+- **Corner cluster is drawer-free:** the corner cabinet (`B-Cnr-F`/`B-Cnr-E`) and the two cabinets that flank it (`B-F-21` front, `B-E-36` stove wall) all have **full-height doors, no drawer**.
+- **Sink:** the countertop has a **cut-out over the sink** (≈758×479 mm) so the bowl is visible through the top.
+- **West of the fridge:** run continues to the end of the wall (base `B-E-f*`, uppers `U-E-f*`).
 - **Upper corner:** 24×24" diagonal cabinet flanked by a 12" cabinet on each wall.
-- **Sink base** has doors only (no drawer). **Over-fridge** is 24" deep. Countertop top at 940 mm.
+- **Over-fridge** is 24" deep. Countertop top at 940 mm.
 - **Fillers:** small (≤ ~2") filler strips take up slack — standard trim, not cabinets.
