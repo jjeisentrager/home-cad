@@ -25,15 +25,18 @@ UP_LEG   = 609.6   # diagonal upper corner 24" legs
 
 # ---- box cabinets: (id, label, wall, a0, a1)  wall in {front, east} ----
 # BASE  (z BASE_Z0..BASE_Z1, depth BASE_D)
+# Corner: a 24" square corner base cabinet with an equal-width door on BOTH walls
+# (built specially -- see CNR_BASE).  These box cabinets are the runs beyond it.
 BASE = [
-    ("B-F-9",    '9"',       "front",  -914.4,  -1143.0),
+    ("B-F-21",   '21"',      "front",  -609.6,  -1143.4),
     ("B-F-sink", '36" sink', "front", -1193.6,  -2108.0),
     ("B-F-30",   '30"',      "front", -2717.6,  -3479.6),
-    ("B-E-36",   '36"',      "east",   -914.4,  -1828.8),
-    ("B-E-24",   '24"',      "east",  -1828.8,  -2438.4),
+    ("B-E-36",   '36"',      "east",   -609.6,  -1524.4),
+    ("B-E-36c",  '36"',      "east",  -1524.4,  -2438.8),
     ("B-E-36b",  '36"',      "east",  -3208.0,  -4122.4),
     ("B-E-30",   '30"',      "east",  -4122.4,  -4884.4),
 ]
+CNR_BASE = 609.6   # 24" square corner base cabinet; a 24" door faces each wall
 # UPPER (z UP_Z0..UP_Z1, depth UP_D)
 UPPER = [
     ("U-F-12", '12"', "front",  -609.6,  -914.4),   # small flank, front side of diagonal
@@ -68,8 +71,6 @@ def widths_summary():
     def wid(a0, a1): return round(abs(a1 - a0) / IN, 1)
     for cid, lbl, wall, a0, a1 in BASE:
         rows.append((cid, "base", wall, wid(a0, a1), 34.5, 24.0))
-    rows.append(("B-CNR", "base diagonal corner", "corner",
-                 round(BASE_LEG / IN, 1), 34.5, 24.0))
     for cid, lbl, wall, a0, a1 in UPPER:
         rows.append((cid, "wall", wall, wid(a0, a1), 36.0, 12.0))
     rows.append(("U-CNR", "wall diagonal corner", "corner",

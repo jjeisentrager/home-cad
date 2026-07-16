@@ -104,11 +104,18 @@ def add(name, solids, color):
 WHITE = (0.93, 0.93, 0.93)
 DARK = (0.12, 0.12, 0.14)
 
-# ---- base cabinets ----
+# ---- base cabinets (runs beyond the corner) ----
 for cid, lbl, wall, a0, a1 in L.BASE:
     add(cid, cabinet(wall, a0, a1, L.BASE_Z0, L.BASE_Z1, L.BASE_D, True, "sink" in cid), WHITE)
-# base diagonal corner
-add("B-CNR", diagonal(L.BASE_LEG, L.BASE_D, L.BASE_Z0, L.BASE_Z1), WHITE)
+
+# ---- corner base cabinet: 24" square carcass, an equal-width door on BOTH walls
+# (symmetric -- a cabinet face on the front wall AND the stove wall) ----
+cw = L.CNR_BASE
+z0b, z1b, dzb = L.BASE_Z0, L.BASE_Z1, L.BASE_Z1 - L.BASE_Z0
+carc = box(cw, cw, dzb, -cw, -cw, z0b)
+dF = box(cw - 2 * REVEAL, DOOR_T, dzb - 2 * REVEAL, -cw + REVEAL, -(cw + DOOR_T), z0b + REVEAL)
+dE = box(DOOR_T, cw - 2 * REVEAL, dzb - 2 * REVEAL, -(cw + DOOR_T), -cw + REVEAL, z0b + REVEAL)
+add("B-Cnr", [carc, dF, dE], WHITE)
 
 # ---- wall cabinets ----
 for cid, lbl, wall, a0, a1 in L.UPPER:
