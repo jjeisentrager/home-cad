@@ -36,6 +36,10 @@ BASE = [
     ("B-E-36c",  '36"',      "east",  -1524.4,  -2438.8),
     ("B-E-36b",  '36"',      "east",  -3208.0,  -4122.4),
     ("B-E-30",   '30"',      "east",  -4122.4,  -4884.4),
+    # west of the fridge -> end of the wall (counter continues into the Main space)
+    ("B-E-f36",  '36"',      "east",  -5815.0,  -6729.4),
+    ("B-E-f30",  '30"',      "east",  -6729.4,  -7491.4),
+    ("B-E-f15",  '15"',      "east",  -7491.4,  -7872.4),
 ]
 CNR_BASE = 609.6   # 24" square corner base cabinet; a 24" door faces each wall
 # UPPER (z UP_Z0..UP_Z1, depth UP_D)
@@ -46,6 +50,10 @@ UPPER = [
     ("U-E-12", '12"', "east",   -609.6,  -914.4),   # small flank, east side of diagonal
     ("U-E-36", '36"', "east",  -3208.0, -4122.4),
     ("U-E-30", '30"', "east",  -4122.4, -4884.4),
+    # west of the fridge -> end of the wall (match the base run)
+    ("U-E-f36", '36"', "east", -5815.0, -6729.4),
+    ("U-E-f30", '30"', "east", -6729.4, -7491.4),
+    ("U-E-f15", '15"', "east", -7491.4, -7872.4),
 ]
 # over-fridge (z OF_Z0..OF_Z1, depth OF_D)
 OVERFRIDGE = [
@@ -57,6 +65,7 @@ COUNTER = [
     ("front",     0.0, -3149.5),   # corner -> slider (shortened with the run)
     ("east",      0.0, -2449.0),   # corner -> range
     ("east",  -3208.0, -4901.0),   # range  -> fridge
+    ("east",  -5809.0, -7918.0),   # west of fridge -> end of wall
 ]
 
 # ---- window slide needed for the east small flank cabinet ----
