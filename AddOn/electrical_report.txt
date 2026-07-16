@@ -1,7 +1,7 @@
 outlet part=Part  switch part=Part
 AddOn_Electrical saved with 12 devices
   Outlet_E1       native X[-7,64] Y[-635,-565] Z[993,1107]
-  Outlet_E2       native X[-7,64] Y[-2285,-2215] Z[993,1107]
+  Outlet_E2       native X[-7,64] Y[-4085,-4015] Z[993,1107]
   Outlet_E3       native X[-7,64] Y[-3135,-3065] Z[993,1107]
   Outlet_StoveLow native X[-7,64] Y[-2863,-2793] Z[243,357]
   Outlet_FridgeLow native X[-7,64] Y[-5390,-5320] Z[243,357]

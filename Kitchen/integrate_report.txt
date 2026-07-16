@@ -1,0 +1,6 @@
+AddOn/AddOn_Assembly.FCStd: hid Kitchen_Counter
+AddOn/AddOn_Assembly.FCStd: removed UpperCabinets
+AddOn/AddOn_Assembly.FCStd: added Cabinets link at base=(51,241,-267)
+House/House.FCStd: hid Kitchen_Counter
+House/House.FCStd: removed UpperCabinets
+House/House.FCStd: added Cabinets link at base=(15223,13982,2603)

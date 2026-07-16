@@ -52,7 +52,9 @@ OPENINGS = {
         (6273.8, 1371.0, 1018.0, 2084.0, False),   # WindowFrontLeft
     ],
     "Wall_Right": [
-        (4572.0, 1371.0, 1018.0, 2084.0, False),   # WindowWall
+        # WindowWall slid 127 mm toward the stove (4572 -> 4445) so a 12" upper
+        # can flank the diagonal corner cabinet on this wall too.
+        (4445.0, 1371.0, 1018.0, 2084.0, False),   # WindowWall
     ],
     "Wall_Left": [
         (1350.0, 1371.0, 1018.0, 2084.0, False),   # WindowWest

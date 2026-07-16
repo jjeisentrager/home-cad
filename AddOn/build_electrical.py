@@ -73,9 +73,9 @@ def place(wall, along, height):
 # -3208, fridge Y -4901..-5809).  Facing this wall (+X), "right" = -Y.
 DEVICES = [
     ("Outlet_E1", "outlet", "east",  -600.0, 1050.0),
-    # E2 was inside the stove window (Y -1900); moved just RIGHT of the window,
-    # into the counter between the window and the stove.
-    ("Outlet_E2", "outlet", "east", -2250.0, 1050.0),
+    # E2 relocated to the range->fridge counter run: the WindowWall was slid
+    # toward the stove (for the corner flank cabinet) and now covers the old spot.
+    ("Outlet_E2", "outlet", "east", -4050.0, 1050.0),
     ("Outlet_E3", "outlet", "east", -3100.0, 1050.0),
     # low appliance receptacles the stove + fridge plug into (behind each).
     ("Outlet_StoveLow",  "outlet", "east", -2828.0, 300.0),
