@@ -30,7 +30,8 @@ UP_LEG   = 609.6   # diagonal upper corner 24" legs
 BASE = [
     ("B-F-21",   '21"',      "front",  -609.6,  -1143.4),
     ("B-F-sink", '36" sink', "front", -1193.6,  -2108.0),
-    ("B-F-30",   '30"',      "front", -2717.6,  -3479.6),
+    # end cabinet trimmed 30" -> 15" (removed 15" at the slider end).
+    ("B-F-15",   '15"',      "front", -2717.6,  -3098.6),
     ("B-E-36",   '36"',      "east",   -609.6,  -1524.4),
     ("B-E-36c",  '36"',      "east",  -1524.4,  -2438.8),
     ("B-E-36b",  '36"',      "east",  -3208.0,  -4122.4),
@@ -40,8 +41,8 @@ CNR_BASE = 609.6   # 24" square corner base cabinet; a 24" door faces each wall
 # UPPER (z UP_Z0..UP_Z1, depth UP_D)
 UPPER = [
     ("U-F-12", '12"', "front",  -609.6,  -914.4),   # small flank, front side of diagonal
-    ("U-F-24", '24"', "front", -2336.5, -2946.1),
-    ("U-F-21", '21"', "front", -2946.1, -3479.5),
+    # two end uppers (24"+21") replaced by one 30" (removed 15" at the slider end).
+    ("U-F-30", '30"', "front", -2336.5, -3098.5),
     ("U-E-12", '12"', "east",   -609.6,  -914.4),   # small flank, east side of diagonal
     ("U-E-36", '36"', "east",  -3208.0, -4122.4),
     ("U-E-30", '30"', "east",  -4122.4, -4884.4),
@@ -53,7 +54,7 @@ OVERFRIDGE = [
 
 # ---- countertop slab segments: (wall, a0, a1) ----
 COUNTER = [
-    ("front",     0.0, -3530.5),   # corner -> slider (over sink + DW)
+    ("front",     0.0, -3149.5),   # corner -> slider (shortened with the run)
     ("east",      0.0, -2449.0),   # corner -> range
     ("east",  -3208.0, -4901.0),   # range  -> fridge
 ]
