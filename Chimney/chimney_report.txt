@@ -5,3 +5,6 @@ main firebox opens -Y, floor local Z=2603.5, opening 1066.8 x 762.0
 ChimneyMass     n=1  X[0,1803] Y[0,787] Z[0,7366]
 HearthBasement  n=1  X[165,1638] Y[330,1245] Z[0,102]
 HearthMain      n=1  X[165,1638] Y[-457,457] Z[2502,2604]
+ChimneyCrown    n=1  X[-51,1854] Y[-51,838] Z[7366,7468]
+Flues           n=3  X[208,1595] Y[241,546] Z[7366,7925]
+FlueCaps        n=15  X[170,1633] Y[203,584] Z[7925,8077]

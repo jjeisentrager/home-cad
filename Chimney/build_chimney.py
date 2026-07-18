@@ -83,6 +83,41 @@ hearth_base = box(HEARTH_W, (D - (D - FB_D)) + HEARTH_PROJ, HEARTH_T,
 hearth_main = box(HEARTH_W, FB_D + HEARTH_PROJ, HEARTH_T,
                   H_X0, -HEARTH_PROJ, MAIN_FB_FLOOR - HEARTH_T)
 
+# --- crown (concrete wash) + 3 flue liners + rain caps at the top ------------
+CROWN_OH  = 2.0  * IN        # crown overhang beyond the mass
+CROWN_T   = 4.0  * IN        # crown slab thickness
+FLUE_OUT  = 12.0 * IN        # square flue-liner outer size
+FLUE_WALL = 1.0  * IN        # liner wall thickness
+FLUE_PROJ = 18.0 * IN        # liner projection above the crown
+CAP_OH    = 1.5  * IN        # cap slab overhang beyond the liner
+CAP_T     = 2.0  * IN        # cap slab thickness
+CAP_LEG   = 1.5  * IN        # cap support-leg size
+CAP_GAP   = 4.0  * IN        # draft gap between liner top and cap slab
+
+crown = box(W + 2 * CROWN_OH, D + 2 * CROWN_OH, CROWN_T, -CROWN_OH, -CROWN_OH, H)
+crown_top = H + CROWN_T
+fy0 = D / 2.0 - FLUE_OUT / 2.0          # flues centred across the depth
+flue_top = crown_top + FLUE_PROJ
+
+flue_solids, cap_solids = [], []
+for cx in (W * 0.2, W * 0.5, W * 0.8):  # 3 flues evenly along the 71" width
+    fx0 = cx - FLUE_OUT / 2.0
+    outer = box(FLUE_OUT, FLUE_OUT, flue_top - H, fx0, fy0, H)
+    bore = box(FLUE_OUT - 2 * FLUE_WALL, FLUE_OUT - 2 * FLUE_WALL,
+               flue_top - H + 1.0, fx0 + FLUE_WALL, fy0 + FLUE_WALL, H - 0.5)
+    flue_solids.append(outer.cut(bore))
+    cap_z0 = flue_top + CAP_GAP
+    slab = box(FLUE_OUT + 2 * CAP_OH, FLUE_OUT + 2 * CAP_OH, CAP_T,
+               fx0 - CAP_OH, fy0 - CAP_OH, cap_z0)
+    legs = [box(CAP_LEG, CAP_LEG, CAP_GAP, lx, ly, flue_top)
+            for lx, ly in ((fx0, fy0),
+                           (fx0 + FLUE_OUT - CAP_LEG, fy0),
+                           (fx0, fy0 + FLUE_OUT - CAP_LEG),
+                           (fx0 + FLUE_OUT - CAP_LEG, fy0 + FLUE_OUT - CAP_LEG))]
+    cap_solids.append(Part.makeCompound([slab] + legs))
+flues = Part.makeCompound(flue_solids)
+caps = Part.makeCompound(cap_solids)
+
 objs = []
 
 
@@ -96,6 +131,9 @@ def add(name, shp):
 add("ChimneyMass", mass)
 add("HearthBasement", hearth_base)
 add("HearthMain", hearth_main)
+add("ChimneyCrown", crown)
+add("Flues", flues)
+add("FlueCaps", caps)
 
 part = doc.addObject("App::Part", "Part")
 part.Label = "Chimney"
@@ -104,9 +142,12 @@ for o in objs:
 doc.recompute()
 
 # --- appearance: brick-red mass, grey cement hearths ------------------------
-BRICK  = (0.60, 0.27, 0.20)     # weathered red brick
-CEMENT = (0.74, 0.74, 0.71)     # light grey concrete
-COLS = {"ChimneyMass": BRICK, "HearthBasement": CEMENT, "HearthMain": CEMENT}
+BRICK  = (0.32, 0.31, 0.32)     # smokey dark-grey brick
+CEMENT = (0.74, 0.74, 0.71)     # light grey concrete (hearths + crown)
+FLUE   = (0.24, 0.23, 0.23)     # dark flue liner
+CAPCOL = (0.42, 0.43, 0.45)     # slate cap
+COLS = {"ChimneyMass": BRICK, "HearthBasement": CEMENT, "HearthMain": CEMENT,
+        "ChimneyCrown": CEMENT, "Flues": FLUE, "FlueCaps": CAPCOL}
 
 
 def paint(o, rgb):

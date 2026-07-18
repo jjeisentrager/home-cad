@@ -8,9 +8,12 @@ import FreeCAD as App
 OUT = os.path.dirname(os.path.abspath(__file__))
 doc = App.openDocument(os.path.join(OUT, "Chimney.FCStd"))
 
-COLS = {"ChimneyMass": (168, 74, 55),
+COLS = {"ChimneyMass": (82, 79, 82),        # smokey dark-grey brick
         "HearthBasement": (196, 196, 188),
-        "HearthMain": (196, 196, 188)}
+        "HearthMain": (196, 196, 188),
+        "ChimneyCrown": (196, 196, 188),
+        "Flues": (62, 60, 60),
+        "FlueCaps": (108, 110, 115)}
 DEFAULT = (170, 170, 170)
 
 tris = []
