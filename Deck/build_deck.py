@@ -178,6 +178,72 @@ objs.append(add("Piers", Part.makeCompound(shafts)))
 objs.append(add("Footings", Part.makeCompound(foots)))
 objs.append(add("BearingPlates", Part.makeCompound(plates)))
 
+# --- exterior stairs at the SE corner ---------------------------------------
+# SE corner of the deck = (X=15313 south edge, Y=18170 east edge).  Two flights,
+# each set ~2 ft back from the corner along its own edge:
+#   * "east"  flight descends toward +Y off the Y=18170 (east) edge
+#   * "south" flight descends toward +X off the X=15313 (south) edge
+# 27.5" total drop -> 4 risers @ 6.875" (<7.75" max), 3 open treads @ 11" run.
+STAIR_RISERS = 4
+STAIR_RISE = (DECK_TOP - GRADE) / STAIR_RISERS       # 174.6 mm (6.875")
+STAIR_TREADS = STAIR_RISERS - 1                       # 3 treads down to grade
+STAIR_RUN = 11.0 * IN                                 # 279.4 mm going
+STAIR_W = 36.0 * IN                                   # 914.4 mm wide
+TREAD_T = 38.1                                         # 2x tread stock
+RISER_T = 19.0                                         # 3/4 riser board
+STR_T = 38.1                                           # 2x12 stringer thickness
+STR_D = 285.75                                         # 2x12 depth
+GAP = 2.0 * 12.0 * IN                                  # 2 ft back from the corner
+PAD_D = 36.0 * IN                                      # 36" landing pad (travel)
+PAD_T = 101.6                                          # 4" slab
+SE_X, SE_Y = 15313.0, 18170.0
+
+
+def wbox(a, b):
+    """axis-aligned box from two opposite world corner Vectors."""
+    x0, x1 = sorted((a.x, b.x))
+    y0, y1 = sorted((a.y, b.y))
+    z0, z1 = sorted((a.z, b.z))
+    return Part.makeBox(x1 - x0, y1 - y0, z1 - z0, V(x0, y0, z0))
+
+
+def build_stair(mp, ext, width):
+    """mp(u,v,z)->world Vector (u across width, v out from deck edge, z up);
+    ext = stringer extrude vector; width = stair width.  Returns (wood, pad)."""
+    wood = []
+    for t in range(1, STAIR_TREADS + 1):                 # treads
+        ztop = DECK_TOP - t * STAIR_RISE
+        wood.append(wbox(mp(0.0, (t - 1) * STAIR_RUN, ztop - TREAD_T),
+                         mp(width, t * STAIR_RUN, ztop)))
+    for r in range(1, STAIR_RISERS + 1):                 # risers
+        v = (r - 1) * STAIR_RUN
+        wood.append(wbox(mp(0.0, v, DECK_TOP - r * STAIR_RISE),
+                         mp(width, v + RISER_T, DECK_TOP - (r - 1) * STAIR_RISE)))
+    for ue in (0.0, width - STR_T):                      # two stringers
+        prof = [mp(ue, 0.0, DECK_TOP),
+                mp(ue, STAIR_TREADS * STAIR_RUN, GRADE),
+                mp(ue, STAIR_TREADS * STAIR_RUN, GRADE - STR_D),
+                mp(ue, 0.0, DECK_TOP - STR_D)]
+        f = Part.Face(Part.makePolygon(prof + [prof[0]]))
+        wood.append(f.extrude(ext))
+    pv = STAIR_TREADS * STAIR_RUN                         # landing pad at grade
+    pad = wbox(mp(-50.0, pv, GRADE - PAD_T),
+               mp(width + 50.0, pv + PAD_D, GRADE))
+    return Part.makeCompound(wood), pad
+
+
+W_EAST = 3.0 * STAIR_W                                    # east flight ~3x wide
+W_SOUTH = STAIR_W
+# east flight: width along X (2 ft back from the corner, running north), out +Y
+mp_east = lambda u, v, z: V(SE_X - GAP - W_EAST + u, SE_Y + v, z)
+# south flight: width along Y (2 ft back from the corner, running west), out +X
+mp_south = lambda u, v, z: V(SE_X + v, SE_Y - GAP - W_SOUTH + u, z)
+wood_e, pad_e = build_stair(mp_east, V(STR_T, 0, 0), W_EAST)
+wood_s, pad_s = build_stair(mp_south, V(0, STR_T, 0), W_SOUTH)
+objs.append(add("StairEast", wood_e))
+objs.append(add("StairSouth", wood_s))
+objs.append(add("StairPads", Part.makeCompound([pad_e, pad_s])))
+
 part = doc.addObject("App::Part", "Part")
 part.Label = "Deck"
 for o in objs:

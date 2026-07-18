@@ -18,6 +18,9 @@ COLS = {
     "Piers": (0.72, 0.72, 0.70),          # concrete
     "Footings": (0.72, 0.72, 0.70),
     "BearingPlates": (0.45, 0.47, 0.50),  # galvanised
+    "StairEast": (0.62, 0.44, 0.29),      # deck-board / PT wood
+    "StairSouth": (0.62, 0.44, 0.29),
+    "StairPads": (0.72, 0.72, 0.70),      # concrete landing pads
 }
 
 log = open(os.path.join(R, "Deck/_linkdeck.txt"), "w", buffering=1)
