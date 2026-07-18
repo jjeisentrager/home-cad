@@ -1,0 +1,7 @@
+Chimney 1803.4 W x 787.4 D x 7366.0 H mm (71 x 31 x 290 in)
+local Z0 = world 101.6 (basement slab); main floor local Z=2501.9
+basement firebox opens +Y, floor local Z=101.6, opening 1066.8 x 762.0
+main firebox opens -Y, floor local Z=2603.5, opening 1066.8 x 762.0
+ChimneyMass     n=1  X[0,1803] Y[0,787] Z[0,7366]
+HearthBasement  n=1  X[165,1638] Y[330,1245] Z[0,102]
+HearthMain      n=1  X[165,1638] Y[-457,457] Z[2502,2604]
