@@ -88,7 +88,12 @@ DEVICES = [
     # structure (partition V_p267), so those devices belong to Main_Electrical.
     # FRONT wall = sink + slider: one countertop GFCI by sink, switch by slider
     ("Outlet_F1", "outlet", "front", -700.0, 1050.0),
-    ("Switch_Slider", "switch", "front", -2650.0, 1220.0),
+    # switch sits right against the slider's east flanking double stud (king
+    # east face at native X -3073.3); plate west edge ~ -3075 = flush with it.
+    ("Switch_Slider", "switch", "front", -3040.0, 1220.0),
+    # receptacle centered under WindowFrontLeft (window left of the slider,
+    # native X center -6273.8), at standard 300 mm AFF wall-outlet height.
+    ("Outlet_FrontLeftWin", "outlet", "front", -6273.8, 300.0),
     # WEST wall = living area (TV at Y -2152..-3504): general receptacles
     ("Outlet_W1", "outlet", "west",  -700.0,  300.0),
     ("Outlet_W2", "outlet", "west", -2828.0,  300.0),

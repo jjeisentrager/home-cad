@@ -1,5 +1,5 @@
 outlet part=Part  switch part=Part
-AddOn_Electrical saved with 12 devices
+AddOn_Electrical saved with 13 devices
   Outlet_E1       native X[-7,64] Y[-635,-565] Z[993,1107]
   Outlet_E2       native X[-7,64] Y[-4085,-4015] Z[993,1107]
   Outlet_E3       native X[-7,64] Y[-3135,-3065] Z[993,1107]
@@ -7,8 +7,11 @@ AddOn_Electrical saved with 12 devices
   Outlet_FridgeLow native X[-7,64] Y[-5390,-5320] Z[243,357]
   Outlet_FridgeA  native X[-7,64] Y[-4785,-4715] Z[993,1107]
   Outlet_F1       native X[-735,-665] Y[-7,64] Z[993,1107]
-  Switch_Slider   native X[-2685,-2615] Y[-21,64] Z[1163,1277]
+  Switch_Slider   native X[-3075,-3005] Y[-21,64] Z[1163,1277]
+  Outlet_FrontLeftWin native X[-6309,-6239] Y[-7,64] Z[243,357]
   Outlet_W1       native X[-7900,-7829] Y[-735,-665] Z[243,357]
   Outlet_W2       native X[-7900,-7829] Y[-2863,-2793] Z[243,357]
   Outlet_W3       native X[-7900,-7829] Y[-5335,-5265] Z[243,357]
   Switch_Passage  native X[-7900,-7815] Y[-5635,-5565] Z[1163,1277]
+
+Electrical link in AddOn_Assembly  world X[-13,5686] Y[484,1518] Z[-330,7633]
